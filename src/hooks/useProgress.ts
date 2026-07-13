@@ -21,10 +21,7 @@ const loadInitial = (): ProgressState => {
     saved = null;
   }
 
-  const prefersDark =
-    typeof window !== "undefined" && window.matchMedia
-      ? window.matchMedia("(prefers-color-scheme: dark)").matches
-      : false;
+  const prefersDark = typeof window !== "undefined" && window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)").matches : false;
 
   return {
     solvedIds: new Set(saved?.solvedIds ?? []),
@@ -43,8 +40,7 @@ export const useProgress = () => {
 
   useEffect(() => {
     try {
-      localStorage.setItem(
-        STORAGE_KEY,
+      localStorage.setItem(STORAGE_KEY,
         JSON.stringify({
           solvedIds: Array.from(progress.solvedIds),
           streak: progress.streak,
@@ -53,7 +49,7 @@ export const useProgress = () => {
         })
       );
     } catch {
-      // localStorage unavailable (private browsing, quota, etc.)
+      
     }
   }, [progress]);
 

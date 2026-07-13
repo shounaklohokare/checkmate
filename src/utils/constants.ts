@@ -1,7 +1,7 @@
 
 import type { Square, PieceSymbol } from 'chess.js'
 
-export type Difficulty = "Easy" | "Medium" | "Hard" | "Expert";
+export type Difficulty = "Easy" | "Medium" | "Hard";
 
 export interface Puzzle {
   id: string;
@@ -25,8 +25,7 @@ export interface PuzzleMetaProps {
 export const DIFFICULTY_STYLES: Record<Difficulty, string> = {
   Easy: 'bg-sage/20 text-sage border-sage/40',
   Medium: 'bg-brass/20 text-brass border-brass/50',
-  Hard: 'bg-burgundy/20 text-burgundy border-burgundy/40 dark:text-[#e08a8a]',
-  Expert: 'bg-ink/20 text-ink border-ink/40 dark:bg-ivory/20 dark:text-ivory dark:border-ivory/40',
+  Hard: 'bg-burgundy/20 text-burgundy border-burgundy/40 dark:text-[#e08a8a]'
 }
 
 export type GameStatus = 'playing' | 'correct-flash' | 'wrong-flash' | 'solved' | 'replaying'
@@ -123,7 +122,7 @@ export interface PuzzleLibraryProps {
   onSelect: (id: string) => void
 }
 
-export const FILTERS: Filter[] = ['All', 'Easy', 'Medium', 'Hard', 'Expert']
+export const FILTERS: Filter[] = ['All', 'Easy', 'Medium', 'Hard']
 
 export const STORAGE_KEY = "gambit-progress-v1";
 

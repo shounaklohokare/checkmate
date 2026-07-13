@@ -1,3 +1,3 @@
-# Gambit - Chess Puzzle Trainer
+# Checkmate - Chess Puzzle Trainer
 
-An web based interactive chess trainer with hundreds of curated puzzles to improve your tactical skills
+A web-based interactive chess trainer featuring hundreds of curated checkmate puzzles to help you improve your tactical skills.
