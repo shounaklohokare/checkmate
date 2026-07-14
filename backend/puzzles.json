@@ -1,6 +1,4 @@
-import type { Puzzle } from "../utils/constants";
-
-export const puzzles: Puzzle[] =  [
+[
   {
     "id": "i5qhQ",
     "title": "Mate in 4",
@@ -18227,9 +18225,4 @@ export const puzzles: Puzzle[] =  [
       "Rf1#"
     ]
   }
-];
-
-export function getPuzzleOfTheDay(): Puzzle {
-  const day = Math.floor(Date.now() / 86400000) % puzzles.length;
-  return puzzles[day];
-}
+]

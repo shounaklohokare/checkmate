@@ -1,0 +1,7 @@
+fastapi>=0.115
+uvicorn[standard]>=0.32
+SQLAlchemy>=2.0
+SQLAlchemy-Utils>=0.41
+psycopg2-binary>=2.9
+chess>=1.11
+pydantic>=2.9

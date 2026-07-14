@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { puzzles, getPuzzleOfTheDay } from "./data/puzzles.ts";
+import axios from "axios";
 import { usePuzzleGame } from "./hooks/usePuzzleGame";
 import { useProgress } from "./hooks/useProgress";
 import Header from "./components/Header.tsx";
@@ -9,14 +9,56 @@ import GameControls from "./components/GameControls.tsx";
 import PuzzleLibrary from "./components/PuzzleLibrary.tsx";
 import type { Puzzle } from "./utils/constants.ts";
 import Footer from "./components/Footer.tsx";
+import { API_BASE_URL } from "./config";
 
 type Mode = "daily" | "library";
 
-const dailyPuzzle: Puzzle = getPuzzleOfTheDay();
+const api = axios.create({
+  baseURL: `${API_BASE_URL}/api`,
+});
 
 const App = () => {
   const [mode, setMode] = useState<Mode>("daily");
-  const [selectedId, setSelectedId] = useState<string>(puzzles[0].id);
+
+
+  const [dailyPuzzle, setDailyPuzzle] = useState<Puzzle | null>(null);
+  const [puzzles, setPuzzles] = useState<Puzzle[]>([]);
+  const [selectedId, setSelectedId] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+
+      async function loadPuzzles() {
+        try {
+          const [dailyRes, puzzlesRes] = await Promise.all([
+            api.get<Puzzle>("/puzzles/daily"),
+            api.get<{
+              items: Puzzle[];
+              total: number;
+              limit: number;
+              offset: number;
+            }>("/puzzles"),
+          ]);
+
+          console.log(dailyRes)
+          console.log(puzzlesRes)
+
+          setDailyPuzzle(dailyRes.data);
+          setPuzzles(puzzlesRes.data.items);
+
+          if (puzzlesRes.data.items.length > 0) {
+            setSelectedId(puzzlesRes.data.items[0].id);
+          }
+        } catch (err) {
+          console.error("Failed to load puzzles:", err);
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      loadPuzzles();
+
+  }, []);
 
   const {
     solvedIds,
@@ -26,22 +68,21 @@ const App = () => {
     toggleDarkMode,
   } = useProgress();
 
-  const activePuzzle = useMemo<Puzzle>(() => {
-    if (mode === "daily") return dailyPuzzle;
-
-    return puzzles.find((p) => p.id === selectedId) ?? puzzles[0];
-  }, [mode, selectedId]);
+ const activePuzzle = useMemo<Puzzle | null>(() => {
+  if (mode === "daily") return dailyPuzzle;
+  return puzzles.find((p) => p.id === selectedId) ?? puzzles[0] ?? null;
+}, [mode, selectedId, dailyPuzzle, puzzles]);
 
   const game = usePuzzleGame(activePuzzle);
 
   useEffect(() => {
-    if (game.isSolved) {
-      markSolved(activePuzzle.id);
-    }
-  }, [game.isSolved, activePuzzle.id, markSolved]);
+  if (game.isSolved && activePuzzle) {
+    markSolved(activePuzzle.id);
+  }
+}, [game.isSolved, activePuzzle?.id, markSolved]);
 
   const currentLibraryIndex = puzzles.findIndex(
-    (p) => p.id === activePuzzle.id
+    (p) => p.id === activePuzzle?.id
   );
 
   const nextPuzzle = currentLibraryIndex >= 0 ? puzzles[currentLibraryIndex + 1] : undefined;
@@ -54,6 +95,14 @@ const App = () => {
   };
 
   const boardSize = 440;
+
+  if (loading || !dailyPuzzle || puzzles.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-parchment dark:bg-ink transition-colors">
@@ -90,7 +139,7 @@ const App = () => {
 
             <div style={{ width: boardSize }} className="w-full">
 
-              <PuzzleMeta puzzle={activePuzzle} solved={solvedIds.has(activePuzzle.id)} />
+              <PuzzleMeta puzzle={activePuzzle} solved={solvedIds.has(activePuzzle?.id)} />
 
               <GameControls game={game} onNext={handleNext} hasNext={Boolean(nextPuzzle)}/>
             </div>
