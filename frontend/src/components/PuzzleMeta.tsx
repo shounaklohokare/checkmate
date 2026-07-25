@@ -15,7 +15,7 @@ const PuzzleMeta = ({ puzzle, solved }: PuzzleMetaProps) => {
         >
           {puzzle.difficulty}
         </span>
-        <span className="font-mono text-xs text-ink/50 dark:text-ivory/50">
+        <span className="font-mono text-xs text-ivory/50">
           {puzzle.rating} rating
         </span>
         {solved && (
@@ -24,10 +24,10 @@ const PuzzleMeta = ({ puzzle, solved }: PuzzleMetaProps) => {
           </span>
         )}
       </div>
-      <h2 className="font-display text-2xl md:text-3xl font-semibold text-ink dark:text-ivory">
+      <h2 className="font-display text-2xl md:text-3xl font-semibold text-ivory">
         {puzzle.title}
       </h2>
-      <p className="text-sm text-ink/70 dark:text-ivory/70 max-w-prose">{puzzle.description}</p>
+      <p className="text-sm text-ivory/70 max-w-prose">{puzzle.description}</p>
     </div>
   )
 }

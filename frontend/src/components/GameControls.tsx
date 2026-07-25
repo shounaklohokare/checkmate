@@ -9,7 +9,7 @@ const GameControls = ({ game, onNext, hasNext }: GameControlsProps) => {
       <p className={`font-mono text-sm ${STATUS_COLOR[status] ?? ''}`}>
         {STATUS_TEXT[status] ?? ''}
         {attempts > 0 && status === 'playing' && (
-          <span className="text-ink/40 dark:text-ivory/40"> · {attempts} attempt{attempts > 1 ? 's' : ''}</span>
+          <span className="text-ivory/40"> · {attempts} attempt{attempts > 1 ? 's' : ''}</span>
         )}
       </p>
 
@@ -26,7 +26,7 @@ const GameControls = ({ game, onNext, hasNext }: GameControlsProps) => {
           type="button"
           onClick={replaySolution}
           disabled={status === 'replaying'}
-          className="px-3 py-1.5 rounded-lg text-sm font-medium border border-ink/20 dark:border-ivory/20 text-ink/70 dark:text-ivory/70 hover:bg-ink/5 dark:hover:bg-ivory/10 disabled:opacity-40 transition-colors"
+          className="px-3 py-1.5 rounded-lg text-sm font-medium border border-ivory/20 text-ivory/70 hover:bg-ivory/10 disabled:opacity-40 transition-colors"
         >
           Show solution
         </button>
@@ -34,7 +34,7 @@ const GameControls = ({ game, onNext, hasNext }: GameControlsProps) => {
           type="button"
           onClick={reset}
           disabled={status === 'replaying'}
-          className="px-3 py-1.5 rounded-lg text-sm font-medium border border-ink/20 dark:border-ivory/20 text-ink/70 dark:text-ivory/70 hover:bg-ink/5 dark:hover:bg-ivory/10 disabled:opacity-40 transition-colors"
+          className="px-3 py-1.5 rounded-lg text-sm font-medium border border-ivory/20 text-ivory/70 hover:bg-ivory/10 disabled:opacity-40 transition-colors"
         >
           Reset
         </button>

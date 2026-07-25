@@ -3,6 +3,13 @@ import type { Square, PieceSymbol } from 'chess.js'
 
 export type Difficulty = "Easy" | "Medium" | "Hard";
 
+export interface HeaderProps {
+  mode: Mode;
+  onModeChange: (mode: Mode) => void;
+  streak: number;
+  subtitle: string;
+}
+
 export interface Puzzle {
   id: string;
   title: string;
@@ -25,7 +32,7 @@ export interface PuzzleMetaProps {
 export const DIFFICULTY_STYLES: Record<Difficulty, string> = {
   Easy: 'bg-sage/20 text-sage border-sage/40',
   Medium: 'bg-brass/20 text-brass border-brass/50',
-  Hard: 'bg-burgundy/20 text-burgundy border-burgundy/40 dark:text-[#e08a8a]'
+  Hard: 'bg-burgundy/20 text-burgundy text-[#e08a8a]'
 }
 
 export type GameStatus = 'playing' | 'correct-flash' | 'wrong-flash' | 'solved' | 'replaying'
@@ -40,11 +47,11 @@ export const STATUS_TEXT: Record<GameStatus, string> = {
 }
 
 export const STATUS_COLOR: Record<GameStatus, string> = {
-  playing: 'text-ink/70 dark:text-ivory/70',
+  playing: 'text-ivory/70',
   'correct-flash': 'text-sage',
-  'wrong-flash': 'text-burgundy dark:text-[#e08a8a]',
+  'wrong-flash': 'text-[#e08a8a]',
   solved: 'text-brass',
-  replaying: 'text-ink/50 dark:text-ivory/50',
+  replaying: 'text-ivory/50',
 }
 
 export interface GameState {
@@ -70,8 +77,6 @@ export interface HeaderProps {
   mode: Mode
   onModeChange: (mode: Mode) => void
   streak: number
-  darkMode: boolean
-  onToggleDark: () => void
 }
 
 export interface LastMove {
@@ -116,11 +121,11 @@ export const STATUS_RING: Record<GameStatus, string> = {
 export type Filter = 'All' | Difficulty
 
 export interface PuzzleLibraryProps {
-  puzzles: Puzzle[]
   activeId: string
   solvedIds: Set<string>
-  onSelect: (id: string) => void
+  onSelect: (puzzle: Puzzle) => void // <-- now passes the full puzzle, not just id
 }
+
 
 export const FILTERS: Filter[] = ['All', 'Easy', 'Medium', 'Hard']
 
