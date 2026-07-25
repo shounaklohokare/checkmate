@@ -18,7 +18,7 @@ const App = () => {
 
   const [dailyPuzzle, setDailyPuzzle] = useState<Puzzle | null>(null);
   const [puzzles, setPuzzles] = useState<Puzzle[]>([]);
-  const [selectedId, setSelectedId] = useState("");
+  const [, setSelectedId] = useState("");
   const [loading, setLoading] = useState(true);
 
   const [selectedPuzzle, setSelectedPuzzle] = useState<Puzzle | null>(null);
