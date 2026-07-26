@@ -6,7 +6,7 @@ const Header = ({ mode, onModeChange, streak, subtitle }: HeaderProps) => {
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
           <img
-            src="/public/chess.svg"
+            src="/chess.svg"
             alt="Chess logo"
             className="h-5 w-5 md:h-9.5 md:w-9.5 mb-[0.5px]"
           />
