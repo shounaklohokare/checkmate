@@ -79,10 +79,11 @@ const App = () => {
   const nextPuzzle = currentLibraryIndex >= 0 ? puzzles[currentLibraryIndex + 1] : undefined;
 
   const handleNext = (): void => {
-    if (!nextPuzzle) return;
-    setMode("library");
-    setSelectedId(nextPuzzle.id);
-  };
+  if (!nextPuzzle) return;
+  setMode("library");
+  setSelectedId(nextPuzzle.id);
+  setSelectedPuzzle(nextPuzzle);
+};
 
   const boardSize = 440;
 
