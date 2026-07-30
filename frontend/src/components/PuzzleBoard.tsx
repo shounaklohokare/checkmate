@@ -7,6 +7,7 @@ import { Square } from 'chess.js'
 
 const PuzzleBoard = ({ game, boardSize = 480 }: PuzzleBoardProps) => {
   const { fen, status, hintSquares, lastMove, attemptMove, solverColor } = game
+  const isSolved = status === 'solved'
 
   const squareStyles = useMemo<SquareStyles>(() => {
     const styles: SquareStyles = {}
@@ -49,13 +50,34 @@ const PuzzleBoard = ({ game, boardSize = 480 }: PuzzleBoardProps) => {
   }
 
   return (
-    <div
-      className={`rounded-2xl p-2 ring-4 transition-colors duration-300 bg-felt-deep ${STATUS_RING[status] ?? 'ring-transparent'}`}
-      style={{ width: boardSize + 16 }}
-    >
-      <Chessboard options={options} />
+    <div className="relative" style={{ width: boardSize + 16 }}>
+      <div
+        className={`rounded-2xl p-2 ring-4 transition-colors duration-300 bg-felt-deep ${
+          STATUS_RING[status] ?? 'ring-transparent'
+        } ${isSolved ? 'animate-solved-glow' : ''}`}
+      >
+        <Chessboard options={options} />
+      </div>
+
+      {isSolved && (
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div className="flex items-center justify-center h-16 w-16 rounded-full bg-sage text-ink shadow-lg animate-solved-pop">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={3}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-8 w-8"
+            >
+              <path d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
 
-export default PuzzleBoard;
+export default PuzzleBoard
