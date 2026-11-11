@@ -52,8 +52,9 @@ export const playSolved = (streak: number): void => {
   [523.25, 659.25, 783.99].forEach((f, i) => tone(f * shift, 0.15 + i * 0.09, 0.45, "sine", 0.15));
 };
 
+/** Same shape as playSolved — a "thunk" then a three-note chime — but a falling G–Eb–C minor arpeggio. */
 export const playWrong = (): void => {
   if (isMuted()) return;
-  tone(220, 0, 0.18, "triangle", 0.12);
-  tone(165, 0.09, 0.28, "triangle", 0.12);
+  tone(140, 0, 0.2, "triangle", 0.3, 55);
+  [392.0, 311.13, 261.63].forEach((f, i) => tone(f, 0.15 + i * 0.09, 0.45, "sine", 0.15));
 };
