@@ -19,6 +19,9 @@ export const usePuzzleGame = ( puzzle: Puzzle | null): UsePuzzleGameReturn => {
 
     const [lastMove, setLastMove] =  useState<LastMove | null>(null);
 
+    // True once "Show solution" was used, so the solved state isn't celebrated as the player's own.
+    const [revealed, setRevealed] = useState<boolean>(false);
+
     const solverColor: "white" | "black" = puzzle?.fen.split(" ")[1] === "b"  ? "black" : "white";
 
   
@@ -61,6 +64,7 @@ export const usePuzzleGame = ( puzzle: Puzzle | null): UsePuzzleGameReturn => {
       setHintLevel(0);
       setAttempts(0);
       setLastMove(null);
+      setRevealed(false);
 
       playInitialMove(chess);
 
@@ -213,6 +217,7 @@ export const usePuzzleGame = ( puzzle: Puzzle | null): UsePuzzleGameReturn => {
       setHintLevel(0);
       setAttempts(0);
       setLastMove(null);
+      setRevealed(false);
 
       playInitialMove(chess);
     }, [puzzle, playInitialMove]);
@@ -231,6 +236,7 @@ export const usePuzzleGame = ( puzzle: Puzzle | null): UsePuzzleGameReturn => {
 
       setFen(chess.fen());
       setStatus("replaying");
+      setRevealed(true);
       setHintLevel(0);
       setMoveIndex(0);
       setLastMove(null);
@@ -271,7 +277,7 @@ export const usePuzzleGame = ( puzzle: Puzzle | null): UsePuzzleGameReturn => {
     }, [puzzle]);
 
     return { 
-      fen, status,attempts,hintLevel,hintSquares, lastMove, moveIndex, solverColor, isSolved: status === "solved", attemptMove, requestHint,
+      fen, status,attempts,hintLevel,hintSquares, lastMove, moveIndex, solverColor, isSolved: status === "solved", revealed, attemptMove, requestHint,
       reset, replaySolution
     };
     

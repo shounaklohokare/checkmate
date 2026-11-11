@@ -87,7 +87,7 @@ const PuzzleLibrary = ({ activeId, solvedIds, onSelect }: PuzzleLibraryProps) =>
                         <span className="text-sm font-medium text-ivory truncate">
                           {p.title}
                         </span>
-                        {isSolved && <span className="text-sage text-xs shrink-0">✓</span>}
+                        {isSolved && <span className="solved-fx animate-pop inline-block text-sage text-xs shrink-0">✓</span>}
                       </div>
                       <div className="flex items-center gap-2 mt-0.5">
                         <span className="font-mono text-xs text-ivory/50">

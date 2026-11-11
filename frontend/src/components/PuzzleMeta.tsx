@@ -19,7 +19,7 @@ const PuzzleMeta = ({ puzzle, solved }: PuzzleMetaProps) => {
           {puzzle.rating} rating
         </span>
         {solved && (
-          <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-sage/20 text-sage border border-sage/40">
+          <span className="solved-fx animate-pop text-xs font-semibold px-2 py-0.5 rounded-full bg-sage/20 text-sage border border-sage/40">
             ✓ Solved
           </span>
         )}

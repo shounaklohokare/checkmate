@@ -10,6 +10,8 @@ import PuzzleLibrary from "./components/PuzzleLibrary.tsx";
 import type { Puzzle } from "./utils/constants.ts";
 import Footer from "./components/Footer.tsx";
 import { api } from "./api.ts";
+import SolvedCard from "./components/SolvedCard.tsx";
+import { playSolved, playWrong } from "./lib/sound.ts";
 
 type Mode = "daily" | "library";
 
@@ -72,6 +74,13 @@ const App = () => {
     }
   }, [game.isSolved, activePuzzle?.id, markSolved]);
 
+  useEffect(() => {
+    if (game.status === "solved" && !game.revealed) playSolved(streak);
+    if (game.status === "wrong-flash") playWrong();
+    // Only react to status transitions; streak changes right after solving and must not replay the chime.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [game.status]);
+
   const currentLibraryIndex = puzzles.findIndex(
     (p) => p.id === activePuzzle?.id
   );
@@ -125,8 +134,19 @@ const App = () => {
 
         <div className="flex flex-col md:flex-row gap-8">
           <div className="flex flex-col items-center gap-5 mx-auto md:mx-0">
-            <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/30 ring-1 ring-ivory/10">
+            <div className="relative rounded-2xl shadow-lg shadow-black/30 ring-1 ring-ivory/10">
               <PuzzleBoard game={game} boardSize={boardSize} />
+              {game.isSolved && (
+                <SolvedCard
+                  key={activePuzzle?.id}
+                  fen={game.fen}
+                  attempts={game.attempts}
+                  revealed={game.revealed}
+                  streak={streak}
+                  hasNext={Boolean(nextPuzzle)}
+                  onNext={handleNext}
+                />
+              )}
             </div>
 
             <div style={{ width: boardSize }} className="w-full">

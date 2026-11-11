@@ -3,11 +3,24 @@ import { Chessboard } from 'react-chessboard'
 
 import type { PieceDropHandlerArgs } from 'react-chessboard'
 import { PuzzleBoardProps, SquareStyles, STATUS_RING } from '../utils/constants'
-import { Square } from 'chess.js'
+import { Chess, Square } from 'chess.js'
+
+const FILES = 'abcdefgh'
 
 const PuzzleBoard = ({ game, boardSize = 480 }: PuzzleBoardProps) => {
   const { fen, status, hintSquares, lastMove, attemptMove, solverColor } = game
   const isSolved = status === 'solved'
+
+  // On checkmate: the mated king's square and the squares of the pieces giving check.
+  const mate = useMemo(() => {
+    if (!isSolved) return null
+    const chess = new Chess(fen)
+    if (!chess.isCheckmate()) return null
+    const turn = chess.turn()
+    const king = chess.findPiece({ type: 'k', color: turn })[0]
+    if (!king) return null
+    return { king, checkers: chess.attackers(king, turn === 'w' ? 'b' : 'w') }
+  }, [isSolved, fen])
 
   const squareStyles = useMemo<SquareStyles>(() => {
     const styles: SquareStyles = {}
@@ -27,8 +40,23 @@ const PuzzleBoard = ({ game, boardSize = 480 }: PuzzleBoardProps) => {
         }
       }
     }
+    if (isSolved) {
+      const lit = new Set<Square>(mate ? mate.checkers : lastMove ? [lastMove.to] : [])
+      for (const f of FILES) {
+        for (let r = 1; r <= 8; r++) {
+          const sq = `${f}${r}` as Square
+          if (sq === mate?.king) {
+            styles[sq] = { animation: 'mated-king 600ms ease-in-out 150ms 2 both' }
+          } else if (lit.has(sq)) {
+            styles[sq] = { ...styles[sq], boxShadow: 'inset 0 0 0 4px var(--color-brass-bright)' }
+          } else {
+            styles[sq] = { ...styles[sq], animation: 'square-dim 300ms ease-out 150ms both' }
+          }
+        }
+      }
+    }
     return styles
-  }, [lastMove, hintSquares])
+  }, [lastMove, hintSquares, isSolved, mate])
 
   const options = {
     id: 'puzzle-board',
@@ -37,6 +65,9 @@ const PuzzleBoard = ({ game, boardSize = 480 }: PuzzleBoardProps) => {
     animationDurationInMs: 200,
     showNotation: true,
     squareStyles,
+    arrows: mate
+      ? mate.checkers.map((sq) => ({ startSquare: sq, endSquare: mate.king, color: 'rgba(224, 192, 122, 0.9)' }))
+      : [],
     allowDragging: status !== 'solved' && status !== 'replaying',
     lightSquareStyle: { backgroundColor: 'var(--color-parchment)' },
     darkSquareStyle: { backgroundColor: 'var(--color-felt)' },
@@ -50,32 +81,17 @@ const PuzzleBoard = ({ game, boardSize = 480 }: PuzzleBoardProps) => {
   }
 
   return (
-    <div className="relative" style={{ width: boardSize + 16 }}>
+    <div className={`relative ${isSolved ? 'solved-fx' : ''}`} style={{ width: boardSize + 16 }}>
+      {isSolved && (
+        <div className="pointer-events-none absolute inset-0 rounded-2xl animate-solved-burst" />
+      )}
       <div
-        className={`rounded-2xl p-2 ring-4 transition-colors duration-300 bg-felt-deep ${
+        className={`relative rounded-2xl p-2 ring-4 transition-colors duration-300 bg-felt-deep ${
           STATUS_RING[status] ?? 'ring-transparent'
-        } ${isSolved ? 'animate-solved-glow' : ''}`}
+        }`}
       >
         <Chessboard options={options} />
       </div>
-
-      {isSolved && (
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="flex items-center justify-center h-16 w-16 rounded-full bg-sage text-ink shadow-lg animate-solved-pop">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={3}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-8 w-8"
-            >
-              <path d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

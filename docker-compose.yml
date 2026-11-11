@@ -1,0 +1,26 @@
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./puzzles.db
+      - CORS_ORIGINS=http://localhost
+    restart: always
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        - VITE_API_BASE_URL=http://localhost:8000
+    ports:
+      - "80:80"
+    environment:
+      - PORT=80
+    depends_on:
+      - backend
+    restart: always

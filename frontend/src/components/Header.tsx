@@ -1,6 +1,15 @@
+import { useState } from "react";
 import { HeaderProps, Mode } from "../utils/constants";
+import { isMuted, setMuted } from "../lib/sound";
 
 const Header = ({ mode, onModeChange, streak, subtitle }: HeaderProps) => {
+  const [muted, setMutedState] = useState(isMuted)
+
+  const toggleMuted = () => {
+    setMuted(!muted)
+    setMutedState(!muted)
+  }
+
   return (
     <header className="flex items-center justify-between gap-4 px-4 md:px-8 py-4 border-b border-ivory/10">
       <div className="flex items-center gap-3">
@@ -44,6 +53,15 @@ const Header = ({ mode, onModeChange, streak, subtitle }: HeaderProps) => {
       </div>
 
       <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={toggleMuted}
+          aria-label={muted ? 'Unmute sounds' : 'Mute sounds'}
+          title={muted ? 'Unmute sounds' : 'Mute sounds'}
+          className="text-sm bg-ivory/5 hover:bg-ivory/10 px-2.5 py-1 rounded-full transition-colors"
+        >
+          <span aria-hidden>{muted ? '🔇' : '🔊'}</span>
+        </button>
         <div
           className="flex items-center gap-1.5 font-mono text-sm text-brass bg-ivory/5 px-2.5 py-1 rounded-full"
           title={`${streak} day streak`}

@@ -92,6 +92,7 @@ export interface HintSquares {
 export interface SquareStyle {
   backgroundColor?: string
   boxShadow?: string
+  animation?: string
 }
 
 export type SquareStyles = Partial<Record<Square, SquareStyle>>
@@ -172,6 +173,7 @@ export interface UsePuzzleGameReturn {
   moveIndex: number;
   solverColor: "white" | "black";
   isSolved: boolean;
+  revealed: boolean;
   attemptMove: (
     from: Square,
     to: Square,
