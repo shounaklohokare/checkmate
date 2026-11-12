@@ -1,33 +1,25 @@
-import  { PuzzleMetaProps, DIFFICULTY_STYLES } from "../utils/constants.ts"
+import { PuzzleMetaProps } from "../utils/constants.ts"
+import { problemPrompt, themeLabel } from "../utils/utils.ts"
+import Pips from "./Pips.tsx"
 
-
-const PuzzleMeta = ({ puzzle, solved }: PuzzleMetaProps) => {
-  
+// The diagram caption, set the way problem books set it: number, then the stipulation.
+const PuzzleMeta = ({ puzzle, solved, inColumn = false }: PuzzleMetaProps) => {
   if (!puzzle) return null
+  const Heading = inColumn ? "h3" : "h2"
   return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-2 flex-wrap">
-        <span className="font-mono text-xs tracking-widest uppercase text-brass">
-          {puzzle.theme}
-        </span>
-        <span
-          className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${DIFFICULTY_STYLES[puzzle.difficulty]}`}
-        >
-          {puzzle.difficulty}
-        </span>
-        <span className="font-mono text-xs text-ivory/50">
-          {puzzle.rating} rating
-        </span>
-        {solved && (
-          <span className="solved-fx animate-pop text-xs font-semibold px-2 py-0.5 rounded-full bg-sage/20 text-sage border border-sage/40">
-            ✓ Solved
-          </span>
-        )}
-      </div>
-      <h2 className="font-display text-2xl md:text-3xl font-semibold text-ivory">
-        {puzzle.title}
-      </h2>
-      <p className="text-sm text-ivory/70 max-w-prose">{puzzle.description}</p>
+    <div className={inColumn ? "relative" : "paper relative px-4 py-3.5 md:px-5"}>
+      <Heading className="pr-16 text-[1.1875rem] leading-snug text-balance md:text-[1.3125rem]">
+        <span className="font-semibold">{problemPrompt(puzzle)}</span>
+      </Heading>
+      <p className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.875rem] font-medium whitespace-nowrap text-ink-soft">
+        <span>{themeLabel(puzzle.theme)}</span>
+        <Pips difficulty={puzzle.difficulty} />
+        <span>Rated <span className="font-mono">{puzzle.rating}</span></span>
+      </p>
+      <p className="mt-1.5 max-w-prose text-[0.9375rem] leading-relaxed text-ink-soft">{puzzle.description}</p>
+      {solved && (
+        <span className={`badge-solved absolute right-3 ${inColumn ? "top-0" : "top-3"}`}>Solved</span>
+      )}
     </div>
   )
 }

@@ -1,4 +1,5 @@
 
+import type { ReactNode } from 'react'
 import type { Square, PieceSymbol } from 'chess.js'
 
 export type Difficulty = "Easy" | "Medium" | "Hard";
@@ -26,13 +27,16 @@ export interface Puzzle {
 
 export interface PuzzleMetaProps {
   puzzle: Puzzle | null | undefined
-  solved: boolean   
+  solved: boolean
+  /** Set inside The Daily Problem column: no paper of its own, and a level-3 heading. */
+  inColumn?: boolean
 }
 
-export const DIFFICULTY_STYLES: Record<Difficulty, string> = {
-  Easy: 'bg-sage/20 text-sage border-sage/40',
-  Medium: 'bg-brass/20 text-brass border-brass/50',
-  Hard: 'bg-burgundy/20 text-burgundy text-[#e08a8a]'
+/** Stamped pips out of three. */
+export const DIFFICULTY_PIPS: Record<Difficulty, number> = {
+  Easy: 1,
+  Medium: 2,
+  Hard: 3,
 }
 
 export type GameStatus = 'playing' | 'correct-flash' | 'wrong-flash' | 'solved' | 'replaying'
@@ -40,18 +44,27 @@ export type SolverColor = 'white' | 'black'
 
 export const STATUS_TEXT: Record<GameStatus, string> = {
   playing: 'Your move.',
-  'correct-flash': 'Correct!',
-  'wrong-flash': 'Not quite — try again.',
-  solved: 'Puzzle solved! 🎉',
-  replaying: 'Playing it out…',
+  'correct-flash': 'Correct. The machine replies…',
+  'wrong-flash': 'Not that one. Try again.',
+  solved: 'Checkmate. Problem solved.',
+  replaying: 'The machine is moving…',
 }
 
 export const STATUS_COLOR: Record<GameStatus, string> = {
-  playing: 'text-ivory/70',
-  'correct-flash': 'text-sage',
-  'wrong-flash': 'text-[#e08a8a]',
-  solved: 'text-brass',
-  replaying: 'text-ivory/50',
+  playing: 'text-ivory',
+  'correct-flash': 'text-verdigris',
+  'wrong-flash': 'text-oxblood-bright',
+  solved: 'text-brass-bright',
+  replaying: 'text-ivory-dim',
+}
+
+/** Indicator lamp beside the status line. */
+export const STATUS_LAMP: Record<GameStatus, string> = {
+  playing: 'lamp-idle',
+  'correct-flash': 'lamp-ok',
+  'wrong-flash': 'lamp-bad',
+  solved: 'lamp-solved',
+  replaying: 'lamp-idle lamp-busy',
 }
 
 export interface GameState {
@@ -61,7 +74,9 @@ export interface GameState {
   replaySolution: () => void
   reset: () => void
   isSolved: boolean
+  revealed: boolean
   attempts: number
+  moveIndex: number
   solverColor: SolverColor
 }
 
@@ -108,15 +123,8 @@ export interface GameState {
 
 export interface PuzzleBoardProps {
   game: GameState
-  boardSize?: number
-}
-
-export const STATUS_RING: Record<GameStatus, string> = {
-  playing: 'ring-transparent',
-  'correct-flash': 'ring-sage',
-  'wrong-flash': 'ring-burgundy',
-  solved: 'ring-brass',
-  replaying: 'ring-transparent',
+  /** Overlay rendered over the board inside the bezel (the solved slip). */
+  children?: ReactNode
 }
 
 export type Filter = 'All' | Difficulty
@@ -129,6 +137,56 @@ export interface PuzzleLibraryProps {
 
 
 export const FILTERS: Filter[] = ['All', 'Easy', 'Medium', 'Hard']
+
+/** Themes present in the puzzle database (the API has no /themes endpoint). */
+export const THEMES: string[] = [
+  'AdvancedPawn',
+  'Advantage',
+  'ArabianMate',
+  'AttackingF2F7',
+  'Attraction',
+  'BackRankMate',
+  'BalestraMate',
+  'BlindSwineMate',
+  'Clearance',
+  'CollinearMove',
+  'CornerMate',
+  'Deflection',
+  'DiscoveredAttack',
+  'DiscoveredCheck',
+]
+
+export interface ModeLeverProps {
+  mode: Mode
+  onModeChange: (mode: Mode) => void
+}
+
+export interface StreakGaugeProps {
+  streak: number
+}
+
+export interface OdometerProps {
+  value: number
+  digits?: number
+  label?: string
+}
+
+export interface DailyColumnProps {
+  puzzle: Puzzle
+  /** Typeset the problem caption inside the column (desktop, where the caption isn't under the board). */
+  showCaption: boolean
+  solvedCount: number
+  streak: number
+  solvedToday: boolean
+}
+
+export interface CabinetDrawerProps {
+  label: string
+  isDesktop: boolean
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  children: ReactNode
+}
 
 export const STORAGE_KEY = "gambit-progress-v1";
 
