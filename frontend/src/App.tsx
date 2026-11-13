@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { usePuzzleGame } from "./hooks/usePuzzleGame";
 import { useProgress } from "./hooks/useProgress";
@@ -11,20 +11,17 @@ import PuzzleLibrary from "./components/PuzzleLibrary.tsx";
 import DailyColumn from "./components/DailyColumn.tsx";
 import CabinetDrawer from "./components/CabinetDrawer.tsx";
 import { GearIcon } from "./components/Icons.tsx";
-import type { Puzzle } from "./utils/constants.ts";
+import type { Mode, Puzzle, PuzzleList } from "./utils/constants.ts";
 import Footer from "./components/Footer.tsx";
 import { api } from "./api.ts";
 import SolvedCard from "./components/SolvedCard.tsx";
 import { playSolved, playTick, playWrong } from "./lib/sound.ts";
-
-type Mode = "daily" | "library";
 
 const App = () => {
   const [mode, setMode] = useState<Mode>("daily");
 
   const [dailyPuzzle, setDailyPuzzle] = useState<Puzzle | null>(null);
   const [puzzles, setPuzzles] = useState<Puzzle[]>([]);
-  const [, setSelectedId] = useState("");
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
@@ -35,7 +32,6 @@ const App = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleLibrarySelect = (puzzle: Puzzle) => {
-    setSelectedId(puzzle.id);
     setSelectedPuzzle(puzzle);
     setDrawerOpen(false);
   };
@@ -49,21 +45,12 @@ const App = () => {
       try {
         const [dailyRes, puzzlesRes] = await Promise.all([
           api.get<Puzzle>("/puzzles/daily"),
-          api.get<{
-            items: Puzzle[];
-            total: number;
-            limit: number;
-            offset: number;
-          }>("/puzzles"),
+          api.get<PuzzleList>("/puzzles"),
         ]);
         if (cancelled) return;
 
         setDailyPuzzle(dailyRes.data);
         setPuzzles(puzzlesRes.data.items);
-
-        if (puzzlesRes.data.items.length > 0) {
-          setSelectedId(puzzlesRes.data.items[0].id);
-        }
       } catch (err) {
         console.error("Failed to load puzzles:", err);
         if (!cancelled) setLoadError(true);
@@ -91,7 +78,10 @@ const App = () => {
     if (game.isSolved && activePuzzle) {
       markSolved(activePuzzle.id);
     }
-  }, [game.isSolved, activePuzzle?.id, markSolved]);
+    // Only on the transition to solved. Right after a puzzle switch the game still reports the previous puzzle's
+    // solved state for one render, so reacting to the puzzle changing would mark the new puzzle solved unplayed.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [game.isSolved]);
 
   useEffect(() => {
     if (game.status === "solved" && !game.revealed) playSolved(streak);
@@ -116,11 +106,8 @@ const App = () => {
   const handleNext = (): void => {
   if (!nextPuzzle) return;
   setMode("library");
-  setSelectedId(nextPuzzle.id);
   setSelectedPuzzle(nextPuzzle);
 };
-
-  const openDrawer = useCallback((open: boolean) => setDrawerOpen(open), []);
 
   if (loadError) {
     return (
@@ -185,7 +172,7 @@ const App = () => {
             {!isDesktop && caption}
           </section>
 
-          <CabinetDrawer label={drawerLabel} isDesktop={isDesktop} open={drawerOpen} onOpenChange={openDrawer}>
+          <CabinetDrawer label={drawerLabel} isDesktop={isDesktop} open={drawerOpen} onOpenChange={setDrawerOpen}>
             {mode === "daily" ? (
               <DailyColumn
                 puzzle={dailyPuzzle}

@@ -35,15 +35,17 @@ python scripts/import_puzzles.py puzzles.json
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env   # edit DATABASE_URL / CORS_ORIGINS as needed
 ```
 
-For local development without Postgres running, just point `DATABASE_URL` at
-SQLite instead — everything in this project is SQLAlchemy-generic and works
-against either:
+Settings come only from real environment variables (`DATABASE_URL`,
+`CORS_ORIGINS`, `MAX_PAGE_SIZE`; see `.env.example`). Nothing loads a `.env`
+file, so export them in your shell.
+
+With no `DATABASE_URL` set, the API reads the committed SQLite database
+`./puzzles.db` (run from `backend/`). To use Postgres instead:
 
 ```bash
-export DATABASE_URL="sqlite:///./chess_puzzles.db"
+export DATABASE_URL="postgresql://puzzle_admin:changeme@localhost:5432/chess_puzzles"
 ```
 
 ## Seed the database
@@ -71,7 +73,6 @@ Interactive docs at `http://localhost:8000/docs`.
 | GET    | `/health`              | Liveness check                                            |
 | GET    | `/api/puzzles`         | List puzzles. Query params: `difficulty`, `theme`, `min_rating`, `max_rating`, `limit` (default 50, max 200), `offset` |
 | GET    | `/api/puzzles/daily`   | Deterministic daily puzzle — same for everyone, changes once a day |
-| GET    | `/api/puzzles/themes`  | Distinct list of themes currently in the database         |
 | GET    | `/api/puzzles/{id}`    | Single puzzle by id (the human-readable slug, e.g. `p1` or `i5qhQ`) — 404 if missing |
 
 `/api/puzzles` and `/api/puzzles/{id}` both return puzzle objects shaped like:
@@ -113,6 +114,6 @@ frontend's origin here in production.
 ## Tested
 
 All endpoints (list with each filter individually and combined, pagination,
-themes, daily, get-by-id, 404 on missing id, 422 on an out-of-range `limit`)
+daily, get-by-id, 404 on missing id, 422 on an out-of-range `limit`)
 were run against a real seeded SQLite database via both FastAPI's TestClient
 and a live `uvicorn` server + curl, including a CORS preflight check.

@@ -4,13 +4,6 @@ import type { Square, PieceSymbol } from 'chess.js'
 
 export type Difficulty = "Easy" | "Medium" | "Hard";
 
-export interface HeaderProps {
-  mode: Mode;
-  onModeChange: (mode: Mode) => void;
-  streak: number;
-  subtitle: string;
-}
-
 export interface Puzzle {
   id: string;
   title: string;
@@ -23,6 +16,14 @@ export interface Puzzle {
   fen: string;
   preMove: string;
   solution: string[];
+}
+
+/** The list endpoint's paginated response. */
+export interface PuzzleList {
+  items: Puzzle[];
+  total: number;
+  limit: number;
+  offset: number;
 }
 
 export interface PuzzleMetaProps {
@@ -67,17 +68,32 @@ export const STATUS_LAMP: Record<GameStatus, string> = {
   replaying: 'lamp-idle lamp-busy',
 }
 
+export interface LastMove {
+  from: Square
+  to: Square
+}
+
+export interface HintSquares {
+  from: Square
+  to?: Square
+}
+
+/** What usePuzzleGame returns; components receive it as `game`. */
 export interface GameState {
+  fen: string
   status: GameStatus
-  hintLevel: number
-  requestHint: () => void
-  replaySolution: () => void
-  reset: () => void
-  isSolved: boolean
-  revealed: boolean
   attempts: number
+  hintLevel: number
+  hintSquares: HintSquares | null
+  lastMove: LastMove | null
   moveIndex: number
   solverColor: SolverColor
+  isSolved: boolean
+  revealed: boolean
+  attemptMove: (from: Square, to: Square, promotion?: PieceSymbol) => boolean
+  requestHint: () => void
+  reset: () => void
+  replaySolution: () => void
 }
 
 export interface GameControlsProps {
@@ -92,33 +108,7 @@ export interface HeaderProps {
   mode: Mode
   onModeChange: (mode: Mode) => void
   streak: number
-}
-
-export interface LastMove {
-  from: Square
-  to: Square
-}
-
-export interface HintSquares {
-  from: Square
-  to?: Square
-}
-
-export interface SquareStyle {
-  backgroundColor?: string
-  boxShadow?: string
-  animation?: string
-}
-
-export type SquareStyles = Partial<Record<Square, SquareStyle>>
-
-export interface GameState {
-  fen: string
-  status: GameStatus
-  hintSquares: HintSquares | null
-  lastMove: LastMove | null
-  attemptMove: (from: Square, to: Square, promotion?: PieceSymbol) => boolean
-  solverColor: SolverColor
+  subtitle: string
 }
 
 export interface PuzzleBoardProps {
@@ -132,7 +122,7 @@ export type Filter = 'All' | Difficulty
 export interface PuzzleLibraryProps {
   activeId: string
   solvedIds: Set<string>
-  onSelect: (puzzle: Puzzle) => void // <-- now passes the full puzzle, not just id
+  onSelect: (puzzle: Puzzle) => void
 }
 
 
@@ -168,7 +158,6 @@ export interface StreakGaugeProps {
 export interface OdometerProps {
   value: number
   digits?: number
-  label?: string
 }
 
 export interface DailyColumnProps {
@@ -202,44 +191,6 @@ export interface ProgressState {
   streak: number;
   lastSolvedDate: string | null;
   darkMode: boolean;
-}
-
-export type Status =
-  | "playing"
-  | "replaying"
-  | "solved"
-  | "correct-flash"
-  | "wrong-flash";
-
-export interface LastMove {
-  from: Square;
-  to: Square;
-}
-
-export interface HintSquares {
-  from: Square;
-  to?: Square;
-}
-
-export interface UsePuzzleGameReturn {
-  fen: string;
-  status: Status;
-  attempts: number;
-  hintLevel: number;
-  hintSquares: HintSquares | null;
-  lastMove: LastMove | null;
-  moveIndex: number;
-  solverColor: "white" | "black";
-  isSolved: boolean;
-  revealed: boolean;
-  attemptMove: (
-    from: Square,
-    to: Square,
-    promotion?: PieceSymbol
-  ) => boolean;
-  requestHint: () => void;
-  reset: () => void;
-  replaySolution: () => void;
 }
 
 export const INITIAL_MOVE_DELAY = 600;

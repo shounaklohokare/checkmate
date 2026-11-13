@@ -1,3 +1,8 @@
 **/node_modules
 **/__pycache__
 .git
+**/.venv
+**/dist
+**/.vite
+**/*.tsbuildinfo
+.impeccable

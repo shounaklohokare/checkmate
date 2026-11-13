@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Filter, FILTERS, Puzzle, PuzzleLibraryProps, THEMES } from '../utils/constants'
+import { Filter, FILTERS, Puzzle, PuzzleList, PuzzleLibraryProps, THEMES } from '../utils/constants'
 import { themeLabel } from '../utils/utils'
 import { api } from "../api.ts";
 import Odometer from './Odometer'
@@ -26,7 +26,7 @@ const PuzzleLibrary = ({ activeId, solvedIds, onSelect }: PuzzleLibraryProps) =>
     setLoading(true)
     setError(false)
 
-    api.get('/puzzles', {
+    api.get<PuzzleList>('/puzzles', {
       params: {
         difficulty: filter === 'All' ? undefined : filter,
         theme: theme || undefined,

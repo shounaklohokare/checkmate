@@ -1,0 +1,609 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-12T11:46:10.442Z",
+  "title": "Design System: Checkmate",
+  "extensions": {
+    "colorMeta": {
+      "soot": {
+        "role": "neutral",
+        "displayName": "Soot",
+        "canonical": "oklch(0.16 0.012 45)",
+        "tonalRamp": [
+          "oklch(0.16 0.012 45)",
+          "oklch(0.2 0.03 32)",
+          "oklch(0.245 0.045 32)",
+          "oklch(0.3 0.06 33)",
+          "oklch(0.37 0.075 35)",
+          "oklch(0.45 0.085 38)",
+          "oklch(0.6 0.07 40)",
+          "oklch(0.8 0.04 45)"
+        ]
+      },
+      "mahogany-950": {
+        "role": "neutral",
+        "displayName": "Mahogany 950",
+        "canonical": "oklch(0.2 0.03 32)",
+        "tonalRamp": [
+          "oklch(0.16 0.012 45)",
+          "oklch(0.2 0.03 32)",
+          "oklch(0.245 0.045 32)",
+          "oklch(0.3 0.06 33)",
+          "oklch(0.37 0.075 35)",
+          "oklch(0.45 0.085 38)",
+          "oklch(0.6 0.07 40)",
+          "oklch(0.8 0.04 45)"
+        ]
+      },
+      "mahogany-900": {
+        "role": "neutral",
+        "displayName": "Mahogany 900",
+        "canonical": "oklch(0.245 0.045 32)",
+        "tonalRamp": [
+          "oklch(0.16 0.012 45)",
+          "oklch(0.2 0.03 32)",
+          "oklch(0.245 0.045 32)",
+          "oklch(0.3 0.06 33)",
+          "oklch(0.37 0.075 35)",
+          "oklch(0.45 0.085 38)",
+          "oklch(0.6 0.07 40)",
+          "oklch(0.8 0.04 45)"
+        ]
+      },
+      "mahogany-800": {
+        "role": "neutral",
+        "displayName": "Mahogany 800",
+        "canonical": "oklch(0.3 0.06 33)",
+        "tonalRamp": [
+          "oklch(0.16 0.012 45)",
+          "oklch(0.2 0.03 32)",
+          "oklch(0.245 0.045 32)",
+          "oklch(0.3 0.06 33)",
+          "oklch(0.37 0.075 35)",
+          "oklch(0.45 0.085 38)",
+          "oklch(0.6 0.07 40)",
+          "oklch(0.8 0.04 45)"
+        ]
+      },
+      "mahogany-700": {
+        "role": "neutral",
+        "displayName": "Mahogany 700",
+        "canonical": "oklch(0.37 0.075 35)",
+        "tonalRamp": [
+          "oklch(0.16 0.012 45)",
+          "oklch(0.2 0.03 32)",
+          "oklch(0.245 0.045 32)",
+          "oklch(0.3 0.06 33)",
+          "oklch(0.37 0.075 35)",
+          "oklch(0.45 0.085 38)",
+          "oklch(0.6 0.07 40)",
+          "oklch(0.8 0.04 45)"
+        ]
+      },
+      "mahogany-600": {
+        "role": "neutral",
+        "displayName": "Mahogany 600",
+        "canonical": "oklch(0.45 0.085 38)",
+        "tonalRamp": [
+          "oklch(0.16 0.012 45)",
+          "oklch(0.2 0.03 32)",
+          "oklch(0.245 0.045 32)",
+          "oklch(0.3 0.06 33)",
+          "oklch(0.37 0.075 35)",
+          "oklch(0.45 0.085 38)",
+          "oklch(0.6 0.07 40)",
+          "oklch(0.8 0.04 45)"
+        ]
+      },
+      "maple": {
+        "role": "neutral",
+        "displayName": "Maple",
+        "canonical": "oklch(0.88 0.05 80)",
+        "tonalRamp": [
+          "oklch(0.15 0.013 80)",
+          "oklch(0.26 0.032 80)",
+          "oklch(0.37 0.050 80)",
+          "oklch(0.48 0.050 80)",
+          "oklch(0.60 0.050 80)",
+          "oklch(0.72 0.050 80)",
+          "oklch(0.84 0.032 80)",
+          "oklch(0.95 0.013 80)"
+        ]
+      },
+      "walnut": {
+        "role": "neutral",
+        "displayName": "Walnut",
+        "canonical": "oklch(0.57 0.075 58)",
+        "tonalRamp": [
+          "oklch(0.15 0.019 58)",
+          "oklch(0.26 0.048 58)",
+          "oklch(0.37 0.075 58)",
+          "oklch(0.48 0.075 58)",
+          "oklch(0.60 0.075 58)",
+          "oklch(0.72 0.075 58)",
+          "oklch(0.84 0.048 58)",
+          "oklch(0.95 0.019 58)"
+        ]
+      },
+      "brass-deep": {
+        "role": "primary",
+        "displayName": "Aged Brass",
+        "canonical": "oklch(0.5 0.085 78)",
+        "tonalRamp": [
+          "oklch(0.15 0.021 78)",
+          "oklch(0.26 0.054 78)",
+          "oklch(0.37 0.085 78)",
+          "oklch(0.48 0.085 78)",
+          "oklch(0.60 0.085 78)",
+          "oklch(0.72 0.085 78)",
+          "oklch(0.84 0.054 78)",
+          "oklch(0.95 0.021 78)"
+        ]
+      },
+      "brass": {
+        "role": "primary",
+        "displayName": "Cabinet Brass",
+        "canonical": "oklch(0.74 0.115 84)",
+        "tonalRamp": [
+          "oklch(0.15 0.029 84)",
+          "oklch(0.26 0.074 84)",
+          "oklch(0.37 0.115 84)",
+          "oklch(0.48 0.115 84)",
+          "oklch(0.60 0.115 84)",
+          "oklch(0.72 0.115 84)",
+          "oklch(0.84 0.074 84)",
+          "oklch(0.95 0.029 84)"
+        ]
+      },
+      "brass-bright": {
+        "role": "primary",
+        "displayName": "Lit Brass",
+        "canonical": "oklch(0.86 0.11 90)",
+        "tonalRamp": [
+          "oklch(0.15 0.028 90)",
+          "oklch(0.26 0.070 90)",
+          "oklch(0.37 0.110 90)",
+          "oklch(0.48 0.110 90)",
+          "oklch(0.60 0.110 90)",
+          "oklch(0.72 0.110 90)",
+          "oklch(0.84 0.070 90)",
+          "oklch(0.95 0.028 90)"
+        ]
+      },
+      "copper": {
+        "role": "tertiary",
+        "displayName": "Copper",
+        "canonical": "oklch(0.62 0.13 48)",
+        "tonalRamp": [
+          "oklch(0.15 0.033 48)",
+          "oklch(0.26 0.083 48)",
+          "oklch(0.37 0.130 48)",
+          "oklch(0.48 0.130 48)",
+          "oklch(0.60 0.130 48)",
+          "oklch(0.72 0.130 48)",
+          "oklch(0.84 0.083 48)",
+          "oklch(0.95 0.033 48)"
+        ]
+      },
+      "verdigris": {
+        "role": "secondary",
+        "displayName": "Verdigris",
+        "canonical": "oklch(0.72 0.085 172)",
+        "tonalRamp": [
+          "oklch(0.15 0.021 172)",
+          "oklch(0.26 0.054 172)",
+          "oklch(0.37 0.085 172)",
+          "oklch(0.48 0.085 172)",
+          "oklch(0.60 0.085 172)",
+          "oklch(0.72 0.085 172)",
+          "oklch(0.84 0.054 172)",
+          "oklch(0.95 0.021 172)"
+        ]
+      },
+      "verdigris-deep": {
+        "role": "secondary",
+        "displayName": "Deep Verdigris",
+        "canonical": "oklch(0.42 0.06 178)",
+        "tonalRamp": [
+          "oklch(0.15 0.015 178)",
+          "oklch(0.26 0.038 178)",
+          "oklch(0.37 0.060 178)",
+          "oklch(0.48 0.060 178)",
+          "oklch(0.60 0.060 178)",
+          "oklch(0.72 0.060 178)",
+          "oklch(0.84 0.038 178)",
+          "oklch(0.95 0.015 178)"
+        ]
+      },
+      "parchment": {
+        "role": "neutral",
+        "displayName": "Parchment",
+        "canonical": "oklch(0.925 0.035 86)",
+        "tonalRamp": [
+          "oklch(0.15 0.009 86)",
+          "oklch(0.26 0.022 86)",
+          "oklch(0.37 0.035 86)",
+          "oklch(0.48 0.035 86)",
+          "oklch(0.60 0.035 86)",
+          "oklch(0.72 0.035 86)",
+          "oklch(0.84 0.022 86)",
+          "oklch(0.95 0.009 86)"
+        ]
+      },
+      "ivory": {
+        "role": "neutral",
+        "displayName": "Ivory",
+        "canonical": "oklch(0.965 0.018 90)",
+        "tonalRamp": [
+          "oklch(0.15 0.004 90)",
+          "oklch(0.26 0.012 90)",
+          "oklch(0.37 0.018 90)",
+          "oklch(0.48 0.018 90)",
+          "oklch(0.60 0.018 90)",
+          "oklch(0.72 0.018 90)",
+          "oklch(0.84 0.012 90)",
+          "oklch(0.95 0.004 90)"
+        ]
+      },
+      "ivory-dim": {
+        "role": "neutral",
+        "displayName": "Ivory Dim",
+        "canonical": "oklch(0.82 0.03 80)",
+        "tonalRamp": [
+          "oklch(0.15 0.007 80)",
+          "oklch(0.26 0.019 80)",
+          "oklch(0.37 0.030 80)",
+          "oklch(0.48 0.030 80)",
+          "oklch(0.60 0.030 80)",
+          "oklch(0.72 0.030 80)",
+          "oklch(0.84 0.019 80)",
+          "oklch(0.95 0.007 80)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "oklch(0.25 0.03 45)",
+        "tonalRamp": [
+          "oklch(0.15 0.007 45)",
+          "oklch(0.26 0.019 45)",
+          "oklch(0.37 0.030 45)",
+          "oklch(0.48 0.030 45)",
+          "oklch(0.60 0.030 45)",
+          "oklch(0.72 0.030 45)",
+          "oklch(0.84 0.019 45)",
+          "oklch(0.95 0.007 45)"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Ink Soft",
+        "canonical": "oklch(0.4 0.04 50)",
+        "tonalRamp": [
+          "oklch(0.15 0.010 50)",
+          "oklch(0.26 0.026 50)",
+          "oklch(0.37 0.040 50)",
+          "oklch(0.48 0.040 50)",
+          "oklch(0.60 0.040 50)",
+          "oklch(0.72 0.040 50)",
+          "oklch(0.84 0.026 50)",
+          "oklch(0.95 0.010 50)"
+        ]
+      },
+      "oxblood": {
+        "role": "tertiary",
+        "displayName": "Oxblood",
+        "canonical": "oklch(0.42 0.13 25)",
+        "tonalRamp": [
+          "oklch(0.15 0.033 25)",
+          "oklch(0.26 0.083 25)",
+          "oklch(0.37 0.130 25)",
+          "oklch(0.48 0.130 25)",
+          "oklch(0.60 0.130 25)",
+          "oklch(0.72 0.130 25)",
+          "oklch(0.84 0.083 25)",
+          "oklch(0.95 0.033 25)"
+        ]
+      },
+      "oxblood-bright": {
+        "role": "tertiary",
+        "displayName": "Bright Oxblood",
+        "canonical": "oklch(0.73 0.14 30)",
+        "tonalRamp": [
+          "oklch(0.15 0.035 30)",
+          "oklch(0.26 0.090 30)",
+          "oklch(0.37 0.140 30)",
+          "oklch(0.48 0.140 30)",
+          "oklch(0.60 0.140 30)",
+          "oklch(0.72 0.140 30)",
+          "oklch(0.84 0.090 30)",
+          "oklch(0.95 0.035 30)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Wordmark, surface titles, slip title, empty and error headlines. 700, -0.02em."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "The puzzle stipulation."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card titles, key labels, status line."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Descriptions and instructions."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase brass labels that name a control or small data block."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "IDs, ratings, totals, page numbers, odometers, key names."
+      }
+    },
+    "shadows": [
+      {
+        "name": "soft-drop",
+        "value": "0 12px 32px -14px oklch(0.08 0.01 40 / 0.75)",
+        "purpose": "Panels, paper, plate, gauge."
+      },
+      {
+        "name": "key-lift",
+        "value": "inset 0 1px 0 oklch(1 0 0 / 0.1), inset 0 0 0 1px oklch(1 0 0 / 0.05), 0 2px 6px oklch(0.08 0.01 40 / 0.45)",
+        "purpose": "Dark keys at rest."
+      },
+      {
+        "name": "key-pressed",
+        "value": "inset 0 1px 3px oklch(0.08 0.01 40 / 0.5)",
+        "purpose": "Active key, with a 1px downward shift."
+      },
+      {
+        "name": "brass-glow",
+        "value": "inset 0 1px 0 oklch(1 0 0 / 0.4), 0 4px 14px -4px oklch(0.74 0.115 84 / 0.45)",
+        "purpose": "Primary brass key."
+      },
+      {
+        "name": "board-lift",
+        "value": "inset 0 1px 0 oklch(1 0 0 / 0.4), 0 24px 48px -18px oklch(0.06 0.01 40 / 0.85)",
+        "purpose": "Board bezel; deepest shadow in the system."
+      },
+      {
+        "name": "card-rest",
+        "value": "inset 0 0 0 1px oklch(0.8 0.05 78 / 0.5), 0 2px 6px oklch(0.06 0.01 40 / 0.4)",
+        "purpose": "Puzzle card at rest."
+      },
+      {
+        "name": "card-hover",
+        "value": "inset 0 0 0 1px oklch(0.8 0.05 78 / 0.5), 0 8px 18px -6px oklch(0.06 0.01 40 / 0.6)",
+        "purpose": "Puzzle card on hover and when current."
+      },
+      {
+        "name": "recess",
+        "value": "inset 0 0 0 1px oklch(1 0 0 / 0.07), inset 0 2px 6px oklch(0.08 0.01 40 / 0.5)",
+        "purpose": "The card well."
+      },
+      {
+        "name": "hairline",
+        "value": "inset 0 0 0 1px oklch(1 0 0 / 0.07)",
+        "purpose": "Edge of every dark surface and track."
+      },
+      {
+        "name": "focus-ring",
+        "value": "outline: 2px solid var(--color-brass-bright); outline-offset: 3px; box-shadow: 0 0 0 5px oklch(0.86 0.11 90 / 0.3)",
+        "purpose": "Default :focus-visible; oxblood on paper; 3px verdigris on the board."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-heavy",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Default for thumbs, knobs, odometer rolls, slip and drawer."
+      },
+      {
+        "name": "ease-mech",
+        "value": "cubic-bezier(0.2, 0.9, 0.3, 1.04)",
+        "purpose": "Slight overshoot for the gauge needle, gear advance and gear lock."
+      },
+      {
+        "name": "key-press",
+        "value": "90ms",
+        "purpose": "Key press transform and shadow."
+      },
+      {
+        "name": "segment-slide",
+        "value": "280ms",
+        "purpose": "Segmented thumb travel."
+      },
+      {
+        "name": "odometer-roll",
+        "value": "650ms",
+        "purpose": "Counter digit roll."
+      },
+      {
+        "name": "needle-settle",
+        "value": "900ms",
+        "purpose": "Streak gauge needle."
+      },
+      {
+        "name": "wrong-clunk",
+        "value": "260ms",
+        "purpose": "Bezel shake on a wrong move."
+      },
+      {
+        "name": "slip-out",
+        "value": "360ms after 360ms",
+        "purpose": "Solved slip rises."
+      },
+      {
+        "name": "stamp-slam",
+        "value": "240ms after 680ms",
+        "purpose": "SOLVED stamp lands."
+      },
+      {
+        "name": "drawer",
+        "value": "340ms",
+        "purpose": "Mobile drawer sheet."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation and transition durations 1ms, no delays, single iteration; steam hidden",
+        "purpose": "prefers-reduced-motion: reduce. Stamp and bell keep their final poses."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Key",
+      "kind": "button",
+      "refersTo": "key",
+      "description": "Default dark button for secondary actions (Hint, Show solution, Reset).",
+      "html": "<button class=\"ds-key\">Show solution</button>",
+      "css": ":host{--color-soot:oklch(0.16 0.012 45);--color-mahogany-950:oklch(0.2 0.03 32);--color-mahogany-900:oklch(0.245 0.045 32);--color-mahogany-700:oklch(0.37 0.075 35);--color-mahogany-600:oklch(0.45 0.085 38);--color-brass:oklch(0.74 0.115 84);--color-brass-bright:oklch(0.86 0.11 90);--color-verdigris:oklch(0.72 0.085 172);--color-verdigris-deep:oklch(0.42 0.06 178);--color-parchment:oklch(0.925 0.035 86);--color-ivory:oklch(0.965 0.018 90);--color-ivory-dim:oklch(0.82 0.03 80);--color-ink:oklch(0.25 0.03 45);--color-ink-soft:oklch(0.4 0.04 50);--color-oxblood:oklch(0.42 0.13 25);} .ds-key{font-family:'Geist',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:2.75rem;padding:.5rem 1.05rem;font-size:.9375rem;font-weight:600;color:var(--color-ivory);background:var(--color-mahogany-700);border:0;border-radius:11px;box-shadow:inset 0 1px 0 oklch(1 0 0 / .1),inset 0 0 0 1px oklch(1 0 0 / .05),0 2px 6px oklch(.08 .01 40 / .45);cursor:pointer;transition:background-color 150ms,transform 90ms cubic-bezier(.16,1,.3,1),box-shadow 90ms}.ds-key:hover{background:var(--color-mahogany-600)}.ds-key:active{transform:translateY(1px);box-shadow:inset 0 1px 3px oklch(.08 .01 40 / .5)}.ds-key:focus-visible{outline:2px solid var(--color-brass-bright);outline-offset:3px;box-shadow:0 0 0 5px oklch(0.86 0.11 90 / 0.3);}.ds-key:disabled{opacity:.4;cursor:not-allowed}"
+    },
+    {
+      "name": "Brass Key",
+      "kind": "button",
+      "refersTo": "key-brass",
+      "description": "The one primary action per view: Next puzzle or Open the Library.",
+      "html": "<button class=\"ds-key-brass\">Next puzzle <svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M6 3l5 5-5 5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button>",
+      "css": ":host{--color-soot:oklch(0.16 0.012 45);--color-mahogany-950:oklch(0.2 0.03 32);--color-mahogany-900:oklch(0.245 0.045 32);--color-mahogany-700:oklch(0.37 0.075 35);--color-mahogany-600:oklch(0.45 0.085 38);--color-brass:oklch(0.74 0.115 84);--color-brass-bright:oklch(0.86 0.11 90);--color-verdigris:oklch(0.72 0.085 172);--color-verdigris-deep:oklch(0.42 0.06 178);--color-parchment:oklch(0.925 0.035 86);--color-ivory:oklch(0.965 0.018 90);--color-ivory-dim:oklch(0.82 0.03 80);--color-ink:oklch(0.25 0.03 45);--color-ink-soft:oklch(0.4 0.04 50);--color-oxblood:oklch(0.42 0.13 25);} .ds-key-brass{font-family:'Geist',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:2.75rem;padding:.5rem 1.05rem;font-size:.9375rem;font-weight:600;color:var(--color-ink);background:linear-gradient(180deg, oklch(0.8 0.11 87), var(--color-brass) 55%, oklch(0.7 0.11 82));border:0;border-radius:11px;box-shadow:inset 0 1px 0 oklch(1 0 0 / .4),0 4px 14px -4px oklch(.74 .115 84 / .45);cursor:pointer;transition:background-color 150ms,transform 90ms;}.ds-key-brass:hover{background:var(--color-brass-bright)}.ds-key-brass:active{transform:translateY(1px)}.ds-key-brass:focus-visible{outline:2px solid var(--color-brass-bright);outline-offset:3px;box-shadow:0 0 0 5px oklch(0.86 0.11 90 / 0.3);}"
+    },
+    {
+      "name": "Segmented Control",
+      "kind": "nav",
+      "refersTo": "segmented",
+      "description": "Radio group under a sliding brass thumb; used for mode and difficulty.",
+      "html": "<fieldset class=\"ds-seg\"><legend class=\"ds-sr\">Mode</legend><span class=\"ds-seg-shoe\"></span><label class=\"ds-seg-opt\"><input type=\"radio\" name=\"ds-mode\" checked class=\"ds-sr\">Daily</label><label class=\"ds-seg-opt\"><input type=\"radio\" name=\"ds-mode\" class=\"ds-sr\">Library</label></fieldset>",
+      "css": ":host{--color-soot:oklch(0.16 0.012 45);--color-mahogany-950:oklch(0.2 0.03 32);--color-mahogany-900:oklch(0.245 0.045 32);--color-mahogany-700:oklch(0.37 0.075 35);--color-mahogany-600:oklch(0.45 0.085 38);--color-brass:oklch(0.74 0.115 84);--color-brass-bright:oklch(0.86 0.11 90);--color-verdigris:oklch(0.72 0.085 172);--color-verdigris-deep:oklch(0.42 0.06 178);--color-parchment:oklch(0.925 0.035 86);--color-ivory:oklch(0.965 0.018 90);--color-ivory-dim:oklch(0.82 0.03 80);--color-ink:oklch(0.25 0.03 45);--color-ink-soft:oklch(0.4 0.04 50);--color-oxblood:oklch(0.42 0.13 25);} .ds-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.ds-seg{font-family:'Geist',ui-sans-serif,system-ui,sans-serif;position:relative;display:grid;grid-template-columns:repeat(2,1fr);padding:4px;margin:0;border:0;min-width:12.5rem;max-width:16rem;border-radius:12px;background:oklch(.17 .022 33);box-shadow:inset 0 0 0 1px oklch(1 0 0 / .07)}.ds-seg:has(:focus-visible){outline:2px solid var(--color-brass-bright);outline-offset:3px;box-shadow:0 0 0 5px oklch(0.86 0.11 90 / 0.3);}.ds-seg-shoe{position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px)/2);border-radius:9px;background:linear-gradient(180deg, oklch(0.8 0.11 87), var(--color-brass) 55%, oklch(0.7 0.11 82));box-shadow:inset 0 1px 0 oklch(1 0 0 / .4),0 2px 8px oklch(.06 .01 40 / .6);transition:transform 280ms cubic-bezier(.16,1,.3,1)}.ds-seg:has(.ds-seg-opt:last-of-type :checked) .ds-seg-shoe{transform:translateX(100%)}.ds-seg-opt{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;min-height:2.25rem;padding:0 .875rem;font-size:.875rem;font-weight:600;color:var(--color-ivory-dim);cursor:pointer;transition:color 200ms}.ds-seg-opt:has(:checked){color:var(--color-ink)}.ds-seg-opt:not(:has(:checked)):hover{color:var(--color-ivory)}"
+    },
+    {
+      "name": "Sound Switch",
+      "kind": "input",
+      "refersTo": "switch-on",
+      "description": "Checkbox with role=switch; brass when on.",
+      "html": "<label class=\"ds-toggle\"><input type=\"checkbox\" role=\"switch\" checked class=\"ds-sr\"><span class=\"ds-toggle-base\"><span class=\"ds-toggle-bat\"></span></span><span class=\"ds-label\">Sound</span></label>",
+      "css": ":host{--color-soot:oklch(0.16 0.012 45);--color-mahogany-950:oklch(0.2 0.03 32);--color-mahogany-900:oklch(0.245 0.045 32);--color-mahogany-700:oklch(0.37 0.075 35);--color-mahogany-600:oklch(0.45 0.085 38);--color-brass:oklch(0.74 0.115 84);--color-brass-bright:oklch(0.86 0.11 90);--color-verdigris:oklch(0.72 0.085 172);--color-verdigris-deep:oklch(0.42 0.06 178);--color-parchment:oklch(0.925 0.035 86);--color-ivory:oklch(0.965 0.018 90);--color-ivory-dim:oklch(0.82 0.03 80);--color-ink:oklch(0.25 0.03 45);--color-ink-soft:oklch(0.4 0.04 50);--color-oxblood:oklch(0.42 0.13 25);} .ds-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.ds-toggle{font-family:'Geist',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;gap:.625rem;min-height:2.75rem;padding:0 .25rem;border-radius:8px;cursor:pointer}.ds-toggle:has(:focus-visible){outline:2px solid var(--color-brass-bright);outline-offset:3px;box-shadow:0 0 0 5px oklch(0.86 0.11 90 / 0.3);}.ds-toggle-base{position:relative;width:2.625rem;height:1.5rem;border-radius:999px;background:var(--color-mahogany-700);box-shadow:inset 0 1px 3px oklch(.06 .01 40 / .6),inset 0 0 0 1px oklch(1 0 0 / .07);transition:background-color 200ms}.ds-toggle-bat{position:absolute;top:3px;left:3px;width:1.125rem;height:1.125rem;border-radius:50%;background:var(--color-ivory);box-shadow:0 1px 3px oklch(.06 0 0 / .6);transition:transform 220ms cubic-bezier(.16,1,.3,1)}.ds-toggle input:checked ~ .ds-toggle-base{background:var(--color-brass)}.ds-toggle input:checked ~ .ds-toggle-base .ds-toggle-bat{transform:translateX(1.125rem)}.ds-label{font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--color-brass);}"
+    },
+    {
+      "name": "Theme Select",
+      "kind": "input",
+      "refersTo": "select",
+      "description": "Native select on a near-soot field with a brass chevron.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-label\">Theme</span><select class=\"ds-select\"><option>All themes</option><option>Back-rank mate</option></select></label>",
+      "css": ":host{--color-soot:oklch(0.16 0.012 45);--color-mahogany-950:oklch(0.2 0.03 32);--color-mahogany-900:oklch(0.245 0.045 32);--color-mahogany-700:oklch(0.37 0.075 35);--color-mahogany-600:oklch(0.45 0.085 38);--color-brass:oklch(0.74 0.115 84);--color-brass-bright:oklch(0.86 0.11 90);--color-verdigris:oklch(0.72 0.085 172);--color-verdigris-deep:oklch(0.42 0.06 178);--color-parchment:oklch(0.925 0.035 86);--color-ivory:oklch(0.965 0.018 90);--color-ivory-dim:oklch(0.82 0.03 80);--color-ink:oklch(0.25 0.03 45);--color-ink-soft:oklch(0.4 0.04 50);--color-oxblood:oklch(0.42 0.13 25);} .ds-field{font-family:'Geist',ui-sans-serif,system-ui,sans-serif;display:block;max-width:20rem}.ds-label{display:block;margin-bottom:.375rem;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--color-brass);}.ds-select{font-family:'Geist',ui-sans-serif,system-ui,sans-serif;appearance:none;width:100%;min-height:2.75rem;padding:.5rem 2.25rem .5rem .875rem;font-size:.9375rem;font-weight:500;color:var(--color-ivory);background:url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23e9cf86' stroke-width='2'/></svg>\") right .875rem center / 12px 8px no-repeat,oklch(.17 .022 33);border:0;border-radius:11px;box-shadow:inset 0 0 0 1px oklch(1 0 0 / .1);cursor:pointer}.ds-select:hover{box-shadow:inset 0 0 0 1px oklch(.74 .115 84 / .5)}.ds-select:focus-visible{outline:2px solid var(--color-brass-bright);outline-offset:3px;box-shadow:0 0 0 5px oklch(0.86 0.11 90 / 0.3);}"
+    },
+    {
+      "name": "Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Dark mahogany surface for controls and the progress ledger.",
+      "html": "<section class=\"ds-panel\"><h2 class=\"ds-label\">Your progress</h2><dl class=\"ds-dl\"><div><dt>Problems solved</dt><dd class=\"ds-mono\">3</dd></div><div><dt>Current streak</dt><dd class=\"ds-mono\">4</dd></div><div><dt>Today&#39;s problem</dt><dd class=\"ds-ok\">Solved</dd></div></dl></section>",
+      "css": ":host{--color-soot:oklch(0.16 0.012 45);--color-mahogany-950:oklch(0.2 0.03 32);--color-mahogany-900:oklch(0.245 0.045 32);--color-mahogany-700:oklch(0.37 0.075 35);--color-mahogany-600:oklch(0.45 0.085 38);--color-brass:oklch(0.74 0.115 84);--color-brass-bright:oklch(0.86 0.11 90);--color-verdigris:oklch(0.72 0.085 172);--color-verdigris-deep:oklch(0.42 0.06 178);--color-parchment:oklch(0.925 0.035 86);--color-ivory:oklch(0.965 0.018 90);--color-ivory-dim:oklch(0.82 0.03 80);--color-ink:oklch(0.25 0.03 45);--color-ink-soft:oklch(0.4 0.04 50);--color-oxblood:oklch(0.42 0.13 25);} .ds-panel{font-family:'Geist',ui-sans-serif,system-ui,sans-serif;max-width:24rem;padding:1rem 1.25rem;color:var(--color-ivory);background:var(--color-mahogany-900);border-radius:16px;box-shadow:inset 0 1px 0 oklch(1 0 0 / .05),inset 0 0 0 1px oklch(1 0 0 / .07),0 12px 32px -14px oklch(0.08 0.01 40 / 0.75)}.ds-label{margin:0;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--color-brass);}.ds-dl{margin:.5rem 0 0;font-size:.9375rem}.ds-dl div{display:flex;justify-content:space-between;padding:.5rem 0;border-top:1px solid oklch(1 0 0 / .06)}.ds-dl div:first-child{border-top:0}.ds-dl dt{color:var(--color-ivory-dim)}.ds-dl dd{margin:0}.ds-mono{font-family:'Geist Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-weight:600}.ds-ok{font-weight:600;color:var(--color-verdigris)}"
+    },
+    {
+      "name": "Puzzle Card",
+      "kind": "card",
+      "refersTo": "puzzle-card",
+      "description": "Parchment list button in the Library: mono ID and rating, title, theme and pips, Solved badge.",
+      "html": "<button class=\"ds-card\" aria-current=\"true\"><span class=\"ds-card-meta\"><span>No. qSWT0</span><span>Rated 801</span></span><span class=\"ds-card-title\"><span>Mate in 1</span><span class=\"ds-badge\">Solved</span></span><span class=\"ds-card-sub\">Discovered Check &middot; <span class=\"ds-pips\"><span class=\"ds-pip ds-pip-on\"></span><span class=\"ds-pip\"></span><span class=\"ds-pip\"></span></span> Easy</span></button>",
+      "css": ":host{--color-soot:oklch(0.16 0.012 45);--color-mahogany-950:oklch(0.2 0.03 32);--color-mahogany-900:oklch(0.245 0.045 32);--color-mahogany-700:oklch(0.37 0.075 35);--color-mahogany-600:oklch(0.45 0.085 38);--color-brass:oklch(0.74 0.115 84);--color-brass-bright:oklch(0.86 0.11 90);--color-verdigris:oklch(0.72 0.085 172);--color-verdigris-deep:oklch(0.42 0.06 178);--color-parchment:oklch(0.925 0.035 86);--color-ivory:oklch(0.965 0.018 90);--color-ivory-dim:oklch(0.82 0.03 80);--color-ink:oklch(0.25 0.03 45);--color-ink-soft:oklch(0.4 0.04 50);--color-oxblood:oklch(0.42 0.13 25);} .ds-card{font-family:'Geist',ui-sans-serif,system-ui,sans-serif;display:block;width:100%;max-width:22rem;padding:.75rem 1rem;text-align:left;color:var(--color-ink);background:var(--color-parchment);border:0;border-radius:12px;box-shadow:inset 0 0 0 1px oklch(.8 .05 78 / .5),0 2px 6px oklch(.06 .01 40 / .4);cursor:pointer;transition:transform 200ms cubic-bezier(.16,1,.3,1),box-shadow 200ms}.ds-card:hover{transform:translateY(-1px);box-shadow:inset 0 0 0 1px oklch(.8 .05 78 / .5),0 8px 18px -6px oklch(.06 .01 40 / .6)}.ds-card[aria-current=\"true\"]{box-shadow:inset 0 0 0 1px oklch(.8 .05 78 / .5),0 0 0 2px var(--color-brass),0 8px 18px -6px oklch(.06 .01 40 / .6)}.ds-card:focus-visible{outline:2px solid var(--color-brass-bright);outline-offset:3px;box-shadow:0 0 0 5px oklch(0.86 0.11 90 / 0.3);}.ds-card-meta{display:flex;justify-content:space-between;font-family:'Geist Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:.75rem;color:var(--color-ink-soft)}.ds-card-title{margin-top:.25rem;display:flex;justify-content:space-between;align-items:center;font-size:1.0625rem;font-weight:600}.ds-card-sub{margin-top:.125rem;display:flex;align-items:center;gap:.375rem;font-size:.875rem;color:var(--color-ink-soft)}.ds-badge{display:inline-flex;padding:.125rem .5rem;font-size:.75rem;font-weight:600;line-height:1.4;color:var(--color-verdigris-deep);background:oklch(.72 .085 172 / .22);border-radius:999px}.ds-pips{display:inline-flex;gap:3px}.ds-pip{display:inline-block;width:.5rem;height:.5rem;border-radius:50%;border:1.5px solid currentColor}.ds-pip-on{background:currentColor}"
+    },
+    {
+      "name": "Solved Slip",
+      "kind": "custom",
+      "refersTo": "paper",
+      "description": "Parchment slip that rises over the board on solve, carrying the one oxblood SOLVED stamp.",
+      "html": "<div class=\"ds-slip\"><span class=\"ds-stamp\">Solved</span><p class=\"ds-slip-title\">Checkmate!</p><p class=\"ds-slip-detail\">Solved first try. Streak <span class=\"ds-mono\">4</span> days</p><div class=\"ds-slip-actions\"><button class=\"ds-key-brass\">Next puzzle <svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M6 3l5 5-5 5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button><button class=\"ds-link\">Review board</button></div></div>",
+      "css": ":host{--color-soot:oklch(0.16 0.012 45);--color-mahogany-950:oklch(0.2 0.03 32);--color-mahogany-900:oklch(0.245 0.045 32);--color-mahogany-700:oklch(0.37 0.075 35);--color-mahogany-600:oklch(0.45 0.085 38);--color-brass:oklch(0.74 0.115 84);--color-brass-bright:oklch(0.86 0.11 90);--color-verdigris:oklch(0.72 0.085 172);--color-verdigris-deep:oklch(0.42 0.06 178);--color-parchment:oklch(0.925 0.035 86);--color-ivory:oklch(0.965 0.018 90);--color-ivory-dim:oklch(0.82 0.03 80);--color-ink:oklch(0.25 0.03 45);--color-ink-soft:oklch(0.4 0.04 50);--color-oxblood:oklch(0.42 0.13 25);} .ds-slip{font-family:'Geist',ui-sans-serif,system-ui,sans-serif;position:relative;max-width:30rem;margin-top:1.5rem;padding:1rem 1.25rem;color:var(--color-ink);background:var(--color-parchment);border-radius:16px;box-shadow:inset 0 0 0 1px oklch(.8 .05 78 / .5),0 12px 32px -14px oklch(0.08 0.01 40 / 0.75)}.ds-stamp{position:absolute;top:-1rem;right:1.5rem;padding:.2em .6em;font-size:1.625rem;font-weight:800;letter-spacing:.12em;line-height:1.1;text-transform:uppercase;color:var(--color-oxblood);border:2.5px solid currentColor;border-radius:8px;rotate:-6deg;opacity:.92}.ds-slip-title{margin:0;font-size:2.125rem;font-weight:700;letter-spacing:-.02em;line-height:1.25}.ds-slip-detail{margin:.25rem 0 0;font-size:.9375rem;color:var(--color-ink-soft)}.ds-mono{font-family:'Geist Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-weight:600}.ds-slip-actions{margin-top:.75rem;display:flex;gap:1rem;align-items:center}.ds-key-brass{font-family:'Geist',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:2.75rem;padding:.5rem 1.05rem;font-size:.9375rem;font-weight:600;color:var(--color-ink);background:linear-gradient(180deg, oklch(0.8 0.11 87), var(--color-brass) 55%, oklch(0.7 0.11 82));border:0;border-radius:11px;box-shadow:inset 0 1px 0 oklch(1 0 0 / .4),0 4px 14px -4px oklch(.74 .115 84 / .45);cursor:pointer;transition:background-color 150ms,transform 90ms;}.ds-key-brass:hover{background:var(--color-brass-bright)}.ds-key-brass:focus-visible,.ds-link:focus-visible{outline:2px solid var(--color-oxblood);outline-offset:3px;box-shadow:0 0 0 5px oklch(0.42 0.13 25 / 0.2);border-radius:6px;}.ds-link{font-family:'Geist',ui-sans-serif,system-ui,sans-serif;background:none;border:0;padding:0 .25rem;font-size:.9375rem;color:var(--color-ink-soft);text-decoration:underline;text-underline-offset:3px;cursor:pointer}.ds-link:hover{color:var(--color-ink)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Cabinet, Rebuilt Flat",
+    "overview": "Checkmate keeps the colours of a mahogany-and-brass games cabinet and drops its period costume. Every surface is a flat, softly rounded slab of one colour with a hairline edge and a soft shadow falling from above; there are no textures, rivets, bevels, engraving or serif faces. What survives of the machine is behavioural rather than decorative: counters that roll, a gauge needle that settles, a gear that turns per correct move, a bell that swings and one stamp that lands when a puzzle is solved.\n\nThe page is dark (mahogany) with two light materials laid on it: parchment for anything you read (the Daily problem, puzzle cards, the solved slip) and brass for the board's frame and the one primary action. Density is moderate: a board-first layout with a single side column, generous 44px controls, and short copy for casual players.\n\nOne grotesk does all the talking. Geist sets UI and display alike; Geist Mono appears only where a value is a code or a count.",
+    "keyCharacteristics": [
+      "Dark mahogany ground; parchment for reading; brass for the board frame, selection and the primary action.",
+      "Flat single-colour surfaces, 16px corners, hairline inset border, soft drop shadow from above.",
+      "Geist everywhere, 700 at -0.02em for display; Geist Mono only for IDs, ratings and counters.",
+      "Every control is a real form control (radios, checkbox switch, native select, buttons) restyled.",
+      "Mechanical motion with a heavy ease-out; reduced motion makes every state instant."
+    ],
+    "rules": [
+      {
+        "name": "The One Meaning Rule",
+        "body": "Brass means \"chosen or primary\", verdigris means \"correct\" (and the keyboard's place on the board), oxblood means \"wrong, in check, or stamped solved\". Never use a signal colour as decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Stamp Rule",
+        "body": "The oxblood stamp appears once: on the solved slip. Solved status everywhere else is the quiet verdigris pill badge.",
+        "section": "colors"
+      },
+      {
+        "name": "The Board Woods Rule",
+        "body": "Maple and walnut belong to the 64 squares. No other surface uses them.",
+        "section": "colors"
+      },
+      {
+        "name": "The Mono Means Data Rule",
+        "body": "Geist Mono sets IDs, ratings and counters (and key names in instructions). Prose, headings and status messages are always Geist.",
+        "section": "typography"
+      },
+      {
+        "name": "The Weight Not Family Rule",
+        "body": "Hierarchy comes from weight (400 / 600 / 700) and size. Don't introduce a second display face.",
+        "section": "typography"
+      },
+      {
+        "name": "The Light From Above Rule",
+        "body": "Highlights sit on top edges, shadows fall below. Never light an element from the side or cast an offset shadow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Flat Slab Rule",
+        "body": "A surface is one colour (brass may carry its gentle top-to-bottom sheen), a hairline, and a soft shadow. No textures, grain, rivets, screws, bevels or engraving.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do build every control from a native element (button, radio, checkbox switch, select) and restyle it; segmented controls are radio groups in a fieldset with a legend.",
+      "Do keep tap targets at least 2.75rem (44px) tall.",
+      "Do use brass for the selected or primary thing, verdigris for correct and for the board's keyboard focus, oxblood for error, check and the single SOLVED stamp.",
+      "Do set IDs, ratings and counters in Geist Mono with tabular figures; everything else in Geist, display at 700 / -0.02em.",
+      "Do separate surfaces with a colour step, a 1px hairline and a soft shadow falling from above.",
+      "Do keep reduced motion instant: transitions and animations collapse to 1ms with no delay, steam is hidden, and the stamp and bell keep their final poses.",
+      "Do pair colour with a second signal: difficulty pips carry the word, status lamps carry a text line."
+    ],
+    "donts": [
+      "Don't add textures, wood grain, rivets, screws, bevels, engraving or embossed type to any surface.",
+      "Don't use a serif or slab display face, or a second display family.",
+      "Don't use mono for prose, headings or status messages.",
+      "Don't add a second stamp, or use oxblood for decoration; solved state elsewhere is the verdigris badge.",
+      "Don't use maple or walnut outside the board squares.",
+      "Don't cast hard or offset shadows; shadows are soft and fall straight down.",
+      "Don't use text glyphs or emoji as icons; icons are inline SVG."
+    ]
+  }
+}

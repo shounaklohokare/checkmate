@@ -12,7 +12,7 @@ const DailyColumn = ({ puzzle, showCaption, solvedCount, streak, solvedToday }: 
       <article className="paper px-5 pt-5 pb-5">
         <h2 className="font-display text-[1.5rem] leading-tight">The Daily Problem</h2>
         <p className="mt-1 flex flex-wrap items-center justify-between gap-x-3 text-[0.875rem] font-medium text-ink-soft">
-          <time dateTime={now.toISOString().slice(0, 10)}>{longDate}</time>
+          <time dateTime={now.toLocaleDateString('en-CA')}>{longDate}</time>
           <span>{solvedToday ? 'Solved today' : 'Awaiting a solver'}</span>
         </p>
 

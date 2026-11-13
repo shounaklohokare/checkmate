@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Chess, Square, PieceSymbol } from "chess.js";
-import { HintSquares, INITIAL_MOVE_DELAY, LastMove, REPLAY_DELAY, REPLY_DELAY, Status, UsePuzzleGameReturn, type Puzzle } from "../utils/constants.ts";
+import { GameState, GameStatus, HintSquares, INITIAL_MOVE_DELAY, LastMove, REPLAY_DELAY, REPLY_DELAY, type Puzzle } from "../utils/constants.ts";
 
-export const usePuzzleGame = ( puzzle: Puzzle | null): UsePuzzleGameReturn => {
+export const usePuzzleGame = ( puzzle: Puzzle | null): GameState => {
     const chessRef = useRef<Chess>(new Chess());
 
     const replayTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    const [fen, setFen] = useState<string>(  puzzle?.initialFen ?? new Chess().fen() );
+    const [fen, setFen] = useState<string>(() => puzzle?.initialFen ?? new Chess().fen());
 
     const [moveIndex, setMoveIndex] = useState<number>(0);
 
-    const [status, setStatus] = useState<Status>("playing");
+    const [status, setStatus] = useState<GameStatus>("playing");
 
     const [hintLevel, setHintLevel] = useState<number>(0);
 
@@ -45,42 +45,6 @@ export const usePuzzleGame = ( puzzle: Puzzle | null): UsePuzzleGameReturn => {
           setStatus("playing");
         }, INITIAL_MOVE_DELAY);
       },[puzzle]);
-
-    useEffect(() => {   
-      
-      if (!puzzle) return;
-
-      if (replayTimer.current) {
-        clearTimeout(replayTimer.current);
-      }
-
-      const chess = new Chess(puzzle.initialFen);
-
-      chessRef.current = chess;
-
-      setFen(chess.fen());
-      setMoveIndex(0);
-      setStatus("playing");
-      setHintLevel(0);
-      setAttempts(0);
-      setLastMove(null);
-      setRevealed(false);
-
-      playInitialMove(chess);
-
-      return () => {
-        if (replayTimer.current) {
-          clearTimeout(replayTimer.current);
-        }
-      };
-    }, [puzzle, playInitialMove]);
-
-    useEffect(() => {
-      return () => {
-        if (replayTimer.current) {
-          clearTimeout(replayTimer.current);
-        } };}, 
-    []);
 
 
     const playOpponentReply = useCallback((idx: number) => {
@@ -128,6 +92,12 @@ export const usePuzzleGame = ( puzzle: Puzzle | null): UsePuzzleGameReturn => {
 
         const snapshotFen = chess.fen();
 
+        // The board has no promotion picker: on the solution's from/to squares, promote to the solution's piece (some puzzles underpromote).
+        const expected = chess.moves({ verbose: true }).find((m) => m.san === expectedSan);
+        if (expected?.promotion && expected.from === sourceSquare && expected.to === targetSquare) {
+          promotion = expected.promotion;
+        }
+
         let mv = null;
 
         try {
@@ -145,7 +115,8 @@ export const usePuzzleGame = ( puzzle: Puzzle | null): UsePuzzleGameReturn => {
 
           setAttempts((a) => a + 1);
 
-          setTimeout(() => { setStatus("playing"); }, 550);
+          // Only end the flash: a quick correct move, a reset or a new puzzle may have moved the status on already.
+          setTimeout(() => { setStatus((s) => (s === "wrong-flash" ? "playing" : s)); }, 550);
 
           return false;
         }
@@ -163,12 +134,7 @@ export const usePuzzleGame = ( puzzle: Puzzle | null): UsePuzzleGameReturn => {
         if (nextIdx >= puzzle.solution.length) {
           setStatus("solved");
         } else {
-          setStatus("correct-flash");
-
-          setTimeout(() => {
-            setStatus("playing");
-          }, 300);
-
+          // Sets "replaying"; GameControls shows that as the correct-move state.
           playOpponentReply(nextIdx);
         }
 
@@ -221,6 +187,16 @@ export const usePuzzleGame = ( puzzle: Puzzle | null): UsePuzzleGameReturn => {
 
       playInitialMove(chess);
     }, [puzzle, playInitialMove]);
+
+    useEffect(() => {
+      reset();
+
+      return () => {
+        if (replayTimer.current) {
+          clearTimeout(replayTimer.current);
+        }
+      };
+    }, [reset]);
 
 
     const replaySolution = useCallback((): void => {
