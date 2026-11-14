@@ -84,7 +84,7 @@ const App = () => {
   const game = usePuzzleGame(activePuzzle);
 
   useEffect(() => {
-    if (game.isSolved && activePuzzle) {
+    if (game.isSolved && !game.revealed && activePuzzle) {
       markSolved(activePuzzle.id);
     }
     // Only on the transition to solved. Right after a puzzle switch the game still reports the previous puzzle's
