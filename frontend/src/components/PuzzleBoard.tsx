@@ -16,9 +16,8 @@ const prefersReducedMotion =
     : false
 
 const PuzzleBoard = ({ game, children }: PuzzleBoardProps) => {
-  const { fen, status, hintSquares, lastMove, attemptMove, solverColor, revealed } = game
+  const { fen, status, hintSquares, lastMove, attemptMove, solverColor } = game
   const isSolved = status === 'solved'
-  const celebrate = isSolved && !revealed
   const canPlay = status !== 'solved' && status !== 'replaying'
 
   const input = useBoardInput(fen, solverColor, canPlay, attemptMove)
@@ -65,13 +64,12 @@ const PuzzleBoard = ({ game, children }: PuzzleBoardProps) => {
           const sq = `${f}${r}` as Square
           if (sq === mate.king) add(sq, 'sq-mated')
           else if (lit.has(sq)) add(sq, 'sq-checker')
-          else if (celebrate) add(sq, 'sq-dim')
         }
       }
     }
     add(input.cursor, 'sq-cursor')
     return cls
-  }, [lastMove, checkedKing, hintSquares, input.selected, input.targets, input.cursor, isSolved, mate, celebrate])
+  }, [lastMove, checkedKing, hintSquares, input.selected, input.targets, input.cursor, isSolved, mate])
 
   // react-chessboard makes every piece a tab stop; the board itself is the single keyboard control here.
   useEffect(() => {
@@ -129,7 +127,7 @@ const PuzzleBoard = ({ game, children }: PuzzleBoardProps) => {
         {ranks.map((r) => <span key={r}>{r}</span>)}
       </div>
 
-      <div className={`board-inlay ${celebrate ? 'solved-fx' : ''}`}>
+      <div className="board-inlay">
         <div
           ref={boardRef}
           className="board-input"
