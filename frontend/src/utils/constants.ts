@@ -29,8 +29,12 @@ export interface PuzzleList {
 export interface PuzzleMetaProps {
   puzzle: Puzzle | null | undefined
   solved: boolean
-  /** Set inside The Daily Problem column: no paper of its own, and a level-3 heading. */
+  /** Set inside the Today's puzzle column: no panel of its own, and a level-3 heading. */
   inColumn?: boolean
+  /** The page fits the viewport: the description is clipped to two lines (one on short screens) so the page fits the viewport. */
+  compact?: boolean
+  /** Daily mode leaves the description out so the screen stays uncluttered. */
+  showDescription?: boolean
 }
 
 /** Stamped pips out of three. */
@@ -108,12 +112,11 @@ export interface HeaderProps {
   mode: Mode
   onModeChange: (mode: Mode) => void
   streak: number
-  subtitle: string
 }
 
 export interface PuzzleBoardProps {
   game: GameState
-  /** Overlay rendered over the board inside the bezel (the solved slip). */
+  /** Overlay rendered over the board inside the frame (the solved card). */
   children?: ReactNode
 }
 
@@ -123,28 +126,27 @@ export interface PuzzleLibraryProps {
   activeId: string
   solvedIds: Set<string>
   onSelect: (puzzle: Puzzle) => void
+  library: LibraryState
+}
+
+/** What useLibrary returns: the catalogue's filter, page and fetched list. */
+export interface LibraryState {
+  filter: Filter
+  page: number
+  pages: number
+  items: Puzzle[]
+  total: number
+  loading: boolean
+  error: boolean
+  setFilter: (filter: Filter) => void
+  setPage: (page: number) => void
+  /** Cards per page; PuzzleLibrary sets it from the room it has. */
+  setPageSize: (size: number) => void
+  retry: () => void
 }
 
 
 export const FILTERS: Filter[] = ['All', 'Easy', 'Medium', 'Hard']
-
-/** Themes present in the puzzle database (the API has no /themes endpoint). */
-export const THEMES: string[] = [
-  'AdvancedPawn',
-  'Advantage',
-  'ArabianMate',
-  'AttackingF2F7',
-  'Attraction',
-  'BackRankMate',
-  'BalestraMate',
-  'BlindSwineMate',
-  'Clearance',
-  'CollinearMove',
-  'CornerMate',
-  'Deflection',
-  'DiscoveredAttack',
-  'DiscoveredCheck',
-]
 
 export interface ModeLeverProps {
   mode: Mode
@@ -174,6 +176,8 @@ export interface CabinetDrawerProps {
   isDesktop: boolean
   open: boolean
   onOpenChange: (open: boolean) => void
+  /** Phones: give the sheet its full height, so the content can measure the room it has (Library mode). */
+  fill?: boolean
   children: ReactNode
 }
 

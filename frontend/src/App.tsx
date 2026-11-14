@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { usePuzzleGame } from "./hooks/usePuzzleGame";
 import { useProgress } from "./hooks/useProgress";
+import { useLibrary } from "./hooks/useLibrary";
 import { useMediaQuery } from "./hooks/useMediaQuery";
 import Header from "./components/Header.tsx";
 import PuzzleBoard from "./components/PuzzleBoard.tsx";
@@ -10,8 +11,8 @@ import GameControls from "./components/GameControls.tsx";
 import PuzzleLibrary from "./components/PuzzleLibrary.tsx";
 import DailyColumn from "./components/DailyColumn.tsx";
 import CabinetDrawer from "./components/CabinetDrawer.tsx";
-import { GearIcon } from "./components/Icons.tsx";
-import type { Mode, Puzzle, PuzzleList } from "./utils/constants.ts";
+import { SpinnerIcon } from "./components/Icons.tsx";
+import type { Mode, Puzzle } from "./utils/constants.ts";
 import Footer from "./components/Footer.tsx";
 import { api } from "./api.ts";
 import SolvedCard from "./components/SolvedCard.tsx";
@@ -21,12 +22,14 @@ const App = () => {
   const [mode, setMode] = useState<Mode>("daily");
 
   const [dailyPuzzle, setDailyPuzzle] = useState<Puzzle | null>(null);
-  const [puzzles, setPuzzles] = useState<Puzzle[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
 
+  const library = useLibrary();
   const [selectedPuzzle, setSelectedPuzzle] = useState<Puzzle | null>(null);
+  // Set while "Next puzzle" waits for the following catalogue page: the page whose first puzzle to select.
+  const [awaitedPage, setAwaitedPage] = useState<number | null>(null);
 
   const isDesktop = useMediaQuery("(min-width: 64rem)");
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -43,14 +46,10 @@ const App = () => {
       setLoading(true);
       setLoadError(false);
       try {
-        const [dailyRes, puzzlesRes] = await Promise.all([
-          api.get<Puzzle>("/puzzles/daily"),
-          api.get<PuzzleList>("/puzzles"),
-        ]);
+        const dailyRes = await api.get<Puzzle>("/puzzles/daily");
         if (cancelled) return;
 
         setDailyPuzzle(dailyRes.data);
-        setPuzzles(puzzlesRes.data.items);
       } catch (err) {
         console.error("Failed to load puzzles:", err);
         if (!cancelled) setLoadError(true);
@@ -67,10 +66,20 @@ const App = () => {
 
   const { solvedIds, streak, markSolved } = useProgress();
 
-  const activePuzzle = useMemo<Puzzle | null>(() => {
-    if (mode === "daily") return dailyPuzzle;
-    return selectedPuzzle ?? puzzles[0] ?? null;
-  }, [mode, dailyPuzzle, selectedPuzzle, puzzles]);
+  // The library's default puzzle is the first one of the first page to arrive; later filter changes don't swap the board.
+  useEffect(() => {
+    if (!selectedPuzzle && !library.loading && library.items[0]) setSelectedPuzzle(library.items[0]);
+  }, [selectedPuzzle, library.loading, library.items]);
+
+  // "Next puzzle" across a page boundary: select the new page's first puzzle once it arrives.
+  // Dropped if the fetch failed or the user moved to another page or filter meanwhile.
+  useEffect(() => {
+    if (awaitedPage === null || library.loading) return;
+    if (!library.error && library.page === awaitedPage && library.items[0]) setSelectedPuzzle(library.items[0]);
+    setAwaitedPage(null);
+  }, [awaitedPage, library.loading, library.error, library.page, library.items]);
+
+  const activePuzzle = mode === "daily" ? dailyPuzzle : selectedPuzzle;
 
   const game = usePuzzleGame(activePuzzle);
 
@@ -97,106 +106,149 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game.moveIndex]);
 
-  const currentLibraryIndex = puzzles.findIndex(
+  // "Next puzzle" follows the catalogue's current list. If the active puzzle isn't in it
+  // (the daily, or the filter/page changed since), next is the list's first other puzzle.
+  const currentLibraryIndex = library.items.findIndex(
     (p) => p.id === activePuzzle?.id
   );
 
-  const nextPuzzle = currentLibraryIndex >= 0 ? puzzles[currentLibraryIndex + 1] : undefined;
+  const nextPuzzle = currentLibraryIndex >= 0
+    ? library.items[currentLibraryIndex + 1]
+    : library.items.find((p) => p.id !== activePuzzle?.id);
+
+  const hasNextPage = currentLibraryIndex >= 0 && library.page < library.pages - 1;
+  const hasNext = Boolean(nextPuzzle) || hasNextPage;
 
   const handleNext = (): void => {
-  if (!nextPuzzle) return;
-  setMode("library");
-  setSelectedPuzzle(nextPuzzle);
-};
+    if (awaitedPage !== null) return;
+    if (nextPuzzle) {
+      setMode("library");
+      setSelectedPuzzle(nextPuzzle);
+    } else if (hasNextPage) {
+      setMode("library");
+      library.setPage(library.page + 1);
+      setAwaitedPage(library.page + 1);
+    }
+  };
 
-  if (loadError) {
+  if (loadError || (library.error && !selectedPuzzle)) {
     return (
       <div className="flex min-h-svh flex-col items-center justify-center gap-4 px-6 text-center">
-        <div className="plate px-8 py-6">
-          <p className="engraved font-display text-[1.625rem]">The mechanism jammed.</p>
-          <p className="engraved mt-1 text-[1rem]">The puzzle archive couldn't be reached. Check that the server is running.</p>
+        <div className="panel max-w-md px-8 py-6">
+          <p className="font-display text-[1.5rem] text-fg">Couldn't reach the puzzles.</p>
+          <p className="mt-1 text-[1rem] text-fg-muted">The puzzle server didn't answer. Check that it's running, then try again.</p>
         </div>
-        <button type="button" className="key" onClick={() => setReloadKey((k) => k + 1)}>
+        <button type="button" className="btn btn-primary" onClick={() => { setReloadKey((k) => k + 1); library.retry(); }}>
           Try again
         </button>
       </div>
     );
   }
 
-  if (loading || !dailyPuzzle || puzzles.length === 0) {
+  if (loading || !dailyPuzzle || !selectedPuzzle) {
     return (
       <div className="flex min-h-svh flex-col items-center justify-center gap-4" role="status">
-        <GearIcon className="gear gear-spin size-14" />
-        <span className="font-mono text-[1rem] font-bold text-ivory-dim">The machine is winding…</span>
+        <SpinnerIcon className="size-10 animate-spin" />
+        <span className="text-[1rem] font-medium text-fg-muted">Loading puzzles…</span>
       </div>
     );
   }
 
   const caption = (
-    <PuzzleMeta puzzle={activePuzzle} solved={activePuzzle ? solvedIds.has(activePuzzle.id) : false} />
+    <PuzzleMeta
+      puzzle={activePuzzle}
+      solved={activePuzzle ? solvedIds.has(activePuzzle.id) : false}
+      compact
+      showDescription={mode === "library"}
+    />
   );
 
-  const drawerLabel = mode === "daily" ? "The Daily Problem" : "The Catalogue";
+  const controls = <GameControls game={game} onNext={handleNext} hasNext={hasNext} />;
+
+  const drawerLabel = mode === "daily" ? "Today's puzzle" : "Library";
   const behindDrawer = drawerOpen && !isDesktop;
 
   return (
-    <div className="flex min-h-svh flex-col">
-      <div inert={behindDrawer}>
+    <div className="flex h-dvh flex-col overflow-hidden max-lg:pb-14">
+      <div inert={behindDrawer} className="shrink-0">
         <Header
           mode={mode}
           onModeChange={setMode}
           streak={streak}
-          subtitle="Checkmate puzzles, sharpen your tactics."
         />
       </div>
 
-      <main className="mx-auto w-full max-w-[78rem] flex-1 px-3 pt-5 pb-24 sm:px-4 md:px-8 md:pt-7 lg:pb-10">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-center lg:gap-10">
-          <section aria-label="Puzzle" className="board-size mx-auto flex flex-col gap-4 lg:mx-0" inert={behindDrawer}>
-            <PuzzleBoard game={game}>
-              {game.isSolved && (
-                <SolvedCard
-                  key={activePuzzle?.id}
-                  fen={game.fen}
-                  attempts={game.attempts}
-                  revealed={game.revealed}
-                  streak={streak}
-                  hasNext={Boolean(nextPuzzle)}
-                  onNext={handleNext}
-                  onBrowse={() => setMode("library")}
-                />
-              )}
-            </PuzzleBoard>
+      <main
+        className="mx-auto min-h-0 w-full max-w-[78rem] flex-1 overflow-y-auto px-3 py-3 sm:px-4 md:px-8 md:pt-4 lg:pb-4"
+      >
+        <div
+          className="flex h-full flex-col gap-3 lg:flex-row lg:items-stretch lg:justify-center lg:gap-10"
+        >
+          <section
+            aria-label="Puzzle"
+            className="play-area board-col-fit mx-auto flex min-h-0 flex-1 flex-col gap-3 max-lg:w-full lg:mx-0 lg:min-w-0 lg:flex-initial"
+            inert={behindDrawer}
+          >
+            <div className="board-fit">
+              <PuzzleBoard game={game}>
+                {game.isSolved && (
+                  <SolvedCard
+                    key={activePuzzle?.id}
+                    fen={game.fen}
+                    attempts={game.attempts}
+                    revealed={game.revealed}
+                    streak={streak}
+                    hasNext={hasNext}
+                    onNext={handleNext}
+                    onBrowse={() => setMode("library")}
+                  />
+                )}
+              </PuzzleBoard>
+            </div>
 
-            <GameControls game={game} onNext={handleNext} hasNext={Boolean(nextPuzzle)} />
+            {!isDesktop && controls}
             {!isDesktop && caption}
           </section>
 
-          <CabinetDrawer label={drawerLabel} isDesktop={isDesktop} open={drawerOpen} onOpenChange={setDrawerOpen}>
-            {mode === "daily" ? (
-              <DailyColumn
-                puzzle={dailyPuzzle}
-                showCaption={isDesktop}
-                solvedCount={solvedIds.size}
-                streak={streak}
-                solvedToday={solvedIds.has(dailyPuzzle.id)}
-              />
-            ) : (
-              <div className="flex flex-col gap-4">
-                {isDesktop && caption}
-                <PuzzleLibrary
-                  activeId={activePuzzle?.id ?? ""}
-                  solvedIds={solvedIds}
-                  onSelect={handleLibrarySelect}
+          <CabinetDrawer label={drawerLabel} isDesktop={isDesktop} open={drawerOpen} onOpenChange={setDrawerOpen} fill>
+            <div className="flex min-h-0 flex-1 flex-col gap-3">
+              {/* Desktop: the controls head the side column so the board can take the full height. */}
+              {isDesktop && controls}
+              {mode === "daily" ? (
+                <DailyColumn
+                  puzzle={dailyPuzzle}
+                  showCaption={isDesktop}
+                  solvedCount={solvedIds.size}
+                  streak={streak}
+                  solvedToday={solvedIds.has(dailyPuzzle.id)}
                 />
-              </div>
-            )}
+              ) : (
+                <>
+                  {isDesktop && caption}
+                  <PuzzleLibrary
+                    activeId={activePuzzle?.id ?? ""}
+                    solvedIds={solvedIds}
+                    onSelect={handleLibrarySelect}
+                    library={library}
+                  />
+                </>
+              )}
+              {/* On phones the drawer handle owns the bottom edge, so the credit rides at the foot of the drawer. */}
+              {!isDesktop && (
+                <div className="mt-auto">
+                  <Footer />
+                </div>
+              )}
+            </div>
           </CabinetDrawer>
         </div>
       </main>
-      <div inert={behindDrawer}>
-        <Footer />
-      </div>
+
+      {isDesktop && (
+        <div className="shrink-0">
+          <Footer />
+        </div>
+      )}
     </div>
   );
 };

@@ -1,150 +1,84 @@
-import { useEffect, useState } from 'react'
-import { Filter, FILTERS, Puzzle, PuzzleList, PuzzleLibraryProps, THEMES } from '../utils/constants'
-import { themeLabel } from '../utils/utils'
-import { api } from "../api.ts";
-import Odometer from './Odometer'
+import { useEffect, useRef } from 'react'
+import { FILTERS, PuzzleLibraryProps } from '../utils/constants'
 import Pips from './Pips'
-import { ArrowIcon, GearIcon } from './Icons'
+import { ArrowIcon, CheckIcon } from './Icons'
 
-const PAGE_SIZE = 30
+const COLS = 2
+const MAX_ROWS = 4
 
-// The catalogue: filters and a page counter over a list of puzzle cards.
-const PuzzleLibrary = ({ activeId, solvedIds, onSelect }: PuzzleLibraryProps) => {
-  const [filter, setFilter] = useState<Filter>('All')
-  const [theme, setTheme] = useState('')
-  const [page, setPage] = useState(0)
+// The library: a difficulty filter, then the card grid with the pager right beneath it. The list itself lives in useLibrary.
+const PuzzleLibrary = ({ activeId, solvedIds, onSelect, library }: PuzzleLibraryProps) => {
+  const { filter, page, pages, items, total, loading, error, setFilter, setPage, setPageSize, retry } = library
+  const summary = filter === 'All' ? 'All difficulties' : filter
 
-  const [items, setItems] = useState<Puzzle[]>([])
-  const [total, setTotal] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
-  const [retry, setRetry] = useState(0)
-
+  // Show as many rows of cards as fit above the pager, so the page never scrolls: 1–4 rows of two.
+  const roomRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    let cancelled = false
-
-    setLoading(true)
-    setError(false)
-
-    api.get<PuzzleList>('/puzzles', {
-      params: {
-        difficulty: filter === 'All' ? undefined : filter,
-        theme: theme || undefined,
-        limit: PAGE_SIZE,
-        offset: page * PAGE_SIZE,
-      },
-    }).then((res) => {
-      if (cancelled) return
-      setItems(res.data.items)
-      setTotal(res.data.total)
-    }).catch(() => {
-      if (!cancelled) setError(true)
-    }).finally(() => !cancelled && setLoading(false))
-
-    return () => { cancelled = true }
-  }, [filter, theme, page, retry])
-
-  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE))
-  const summary = [filter === 'All' ? 'All difficulties' : filter, theme ? themeLabel(theme) : 'All themes'].join(' · ')
-
-  const chooseFilter = (f: Filter) => {
-    setFilter(f)
-    setPage(0)
-  }
+    const room = roomRef.current
+    if (!room) return
+    const measure = () => {
+      const stack = room.firstElementChild as HTMLElement | null
+      const list = room.querySelector('ul')
+      const card = list?.querySelector('li')
+      const nav = room.querySelector('nav')
+      if (!stack || !list || !card || !nav) return
+      const pad = parseFloat(getComputedStyle(room).paddingTop) + parseFloat(getComputedStyle(room).paddingBottom)
+      const space = room.clientHeight - pad - nav.offsetHeight - (parseFloat(getComputedStyle(stack).rowGap) || 0)
+      const gap = parseFloat(getComputedStyle(list).rowGap) || 0
+      const rows = Math.floor((space + gap) / (card.offsetHeight + gap))
+      setPageSize(Math.min(MAX_ROWS, Math.max(1, rows)) * COLS)
+    }
+    const ro = new ResizeObserver(measure)
+    ro.observe(room)
+    return () => ro.disconnect()
+  }, [setPageSize])
 
   return (
-    <div className="flex flex-col gap-4">
-      <section aria-labelledby="catalogue-title" className="panel px-4 pt-4 pb-5">
-        {/* Drawer front: the brass label holder names what the drawer holds. */}
-        <div className="flex items-baseline justify-between gap-3">
-          <h2 id="catalogue-title" className="font-display text-[1.375rem] leading-tight text-ivory">The Catalogue</h2>
-          <p className="text-[0.875rem] text-ivory-dim" aria-live="polite">
-            <span className="font-mono">{total.toLocaleString('en-GB')}</span> {total === 1 ? 'problem' : 'problems'}
-            <span className="sr-only"> · {summary}</span>
-          </p>
-        </div>
+    <section aria-labelledby="library-title" className="flex min-h-0 flex-1 flex-col gap-3">
+      <div className="flex items-baseline justify-between gap-3">
+        <h2 id="library-title" className="font-display text-[1.25rem] leading-tight text-fg">Library</h2>
+        <p className="text-[0.875rem] text-fg-muted" aria-live="polite">
+          <span className="font-mono">{total.toLocaleString('en-GB')}</span> {total === 1 ? 'puzzle' : 'puzzles'}
+          <span className="sr-only"> · {summary}</span>
+        </p>
+      </div>
 
-        <div className="mt-4 flex flex-col gap-4">
-        <fieldset>
-          <legend className="label-cab">Difficulty</legend>
-          <div className="lever mt-1.5" style={{ ['--n' as string]: FILTERS.length, ['--i' as string]: FILTERS.indexOf(filter) }}>
-            <span className="lever-shoe" aria-hidden="true" />
-            {FILTERS.map((f) => (
-              <label key={f} className="lever-option">
-                <input
-                  type="radio"
-                  name="difficulty"
-                  value={f}
-                  checked={filter === f}
-                  onChange={() => chooseFilter(f)}
-                  className="sr-only"
-                />
-                {f}
-              </label>
-            ))}
-          </div>
-        </fieldset>
+      <fieldset className="segmented" style={{ ['--n' as string]: FILTERS.length, ['--i' as string]: FILTERS.indexOf(filter) }}>
+        <legend className="sr-only">Difficulty</legend>
+        <span className="segmented-thumb" aria-hidden="true" />
+        {FILTERS.map((f) => (
+          <label key={f} className="segmented-option">
+            <input
+              type="radio"
+              name="difficulty"
+              value={f}
+              checked={filter === f}
+              onChange={() => setFilter(f)}
+              className="sr-only"
+            />
+            {f}
+          </label>
+        ))}
+      </fieldset>
 
-        <label className="block">
-          <span className="label-cab mb-1.5 block">Theme</span>
-          <select
-            className="select-window"
-            value={theme}
-            onChange={(e) => {
-              setTheme(e.target.value)
-              setPage(0)
-            }}
-          >
-            <option value="">All themes</option>
-            {THEMES.map((t) => (
-              <option key={t} value={t}>{themeLabel(t)}</option>
-            ))}
-          </select>
-        </label>
-        </div>
-        <nav aria-label="Catalogue pages" className="mt-4 flex items-center justify-between gap-3 border-t border-white/[0.06] pt-4">
-          <button
-            type="button"
-            className="key key-square"
-            aria-label="Previous page"
-            disabled={page === 0 || loading}
-            onClick={() => setPage((p) => Math.max(0, p - 1))}
-          >
-            <ArrowIcon direction="left" />
-          </button>
-          <p className="flex items-center gap-2 text-[1.0625rem]">
-            <span className="text-[0.875rem] text-ivory-dim">Page</span>
-            <Odometer value={page + 1} digits={1} />
-            <span className="text-[0.875rem] text-ivory-dim">of</span>
-            <Odometer value={pages} digits={1} />
-            <span className="sr-only" aria-live="polite">Page {page + 1} of {pages}</span>
-          </p>
-          <button
-            type="button"
-            className="key key-square"
-            aria-label="Next page"
-            disabled={page >= pages - 1 || loading}
-            onClick={() => setPage((p) => Math.min(pages - 1, p + 1))}
-          >
-            <ArrowIcon direction="right" />
-          </button>
-        </nav>
-      </section>
-
-      <div className="well relative p-2.5">
+      <div ref={roomRef} className="-mx-1 min-h-0 flex-1 overflow-y-auto px-1 py-1" data-scroll>
+        <div className="flex flex-col gap-3">
         {error ? (
-          <div className="flex flex-col items-center gap-3 px-4 py-10 text-center">
-            <p className="font-display text-[1.25rem] text-oxblood-bright">The mechanism jammed.</p>
-            <p className="text-[0.9375rem] text-ivory-dim">The catalogue couldn't be fetched. Check that the server is running.</p>
-            <button type="button" className="key" onClick={() => setRetry((r) => r + 1)}>Try again</button>
+          <div className="flex flex-col items-center gap-2 px-4 py-8 text-center">
+            <p className="text-[1.0625rem] font-semibold text-danger">Couldn't load puzzles.</p>
+            <p className="text-[0.9375rem] text-fg-muted">Check that the server is running, then try again.</p>
+            <button type="button" className="btn mt-2" onClick={retry}>Try again</button>
           </div>
         ) : !loading && items.length === 0 ? (
-          <div className="px-4 py-10 text-center">
-            <p className="font-display text-[1.25rem] text-brass-bright">No problems match these settings.</p>
-            <p className="mt-1 text-[0.9375rem] text-ivory-dim">Adjust the dials: try another theme or difficulty.</p>
+          <div className="px-4 py-8 text-center">
+            <p className="text-[1.0625rem] font-semibold text-fg">No puzzles at this difficulty.</p>
+            <p className="mt-1 text-[0.9375rem] text-fg-muted">Pick another difficulty above.</p>
           </div>
         ) : (
-          <ul className={`space-y-2 transition-opacity duration-200 ${loading ? 'opacity-50' : ''}`}>
+          <ul
+            aria-busy={loading}
+            className={`grid grid-cols-2 gap-2 [@media(max-height:50rem)]:gap-1.5 transition-opacity duration-150 ${loading ? 'opacity-50' : ''}`}
+          >
             {items.map((p) => {
               const isActive = p.id === activeId
               const isSolved = solvedIds.has(p.id)
@@ -154,18 +88,22 @@ const PuzzleLibrary = ({ activeId, solvedIds, onSelect }: PuzzleLibraryProps) =>
                     type="button"
                     onClick={() => onSelect(p)}
                     aria-current={isActive ? 'true' : undefined}
-                    className="index-card px-4 py-3"
+                    className="puzzle-card"
                   >
-                    <span className="flex items-center justify-between gap-2">
-                      <span className="text-[1.0625rem] font-semibold text-ink">{p.title}</span>
-                      {isSolved && <span className="badge-solved">Solved</span>}
+                    <span className="flex items-baseline justify-between gap-2">
+                      <span className="text-[0.9375rem] font-semibold">{p.title}</span>
+                      <span className="text-[0.8125rem] text-fg-muted">
+                        <span className="max-sm:sr-only">Rated </span><span className="font-mono">{p.rating}</span>
+                      </span>
                     </span>
-                    <span className="mt-0.5 flex flex-wrap items-center gap-x-2 text-[0.875rem] text-ink-soft">
-                      <span>{themeLabel(p.theme)}</span>
-                      <span aria-hidden="true">·</span>
+                    <span className="mt-1.5 flex items-center justify-between gap-2 text-[0.8125rem] text-fg-muted [@media(max-height:50rem)]:mt-1">
                       <Pips difficulty={p.difficulty} />
-                      <span aria-hidden="true">·</span>
-                      <span>Rated <span className="font-mono">{p.rating}</span></span>
+                      {isSolved && (
+                        <span className="inline-flex items-center gap-1 font-semibold text-success">
+                          <CheckIcon className="size-3.5" />
+                          <span className="max-sm:sr-only">Solved</span>
+                        </span>
+                      )}
                     </span>
                   </button>
                 </li>
@@ -174,16 +112,32 @@ const PuzzleLibrary = ({ activeId, solvedIds, onSelect }: PuzzleLibraryProps) =>
           </ul>
         )}
 
-        {loading && (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden="true">
-            <span className="flex items-center gap-2 rounded-md bg-soot/85 px-3 py-2 text-[0.875rem] font-semibold text-ivory">
-              <GearIcon className="gear gear-spin size-6" /> Fetching cards…
-            </span>
-          </div>
-        )}
+        <nav aria-label="Library pages" className="flex items-center justify-between gap-2">
+        <button
+          type="button"
+          className="btn px-3"
+          aria-label="Previous page"
+          disabled={page === 0 || loading}
+          onClick={() => setPage(Math.max(0, page - 1))}
+        >
+          <ArrowIcon direction="left" /> <span aria-hidden="true">Previous</span>
+        </button>
+        <p className="text-[0.875rem] text-fg-muted" aria-live="polite">
+          Page <span className="font-mono text-fg">{page + 1}</span> of <span className="font-mono text-fg">{pages}</span>
+        </p>
+        <button
+          type="button"
+          className="btn px-3"
+          aria-label="Next page"
+          disabled={page >= pages - 1 || loading}
+          onClick={() => setPage(Math.min(pages - 1, page + 1))}
+        >
+          <span aria-hidden="true">Next</span> <ArrowIcon direction="right" />
+        </button>
+        </nav>
+        </div>
       </div>
-
-    </div>
+    </section>
   )
 }
 

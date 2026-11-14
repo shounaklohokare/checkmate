@@ -13,12 +13,6 @@ export const hintText = (hintLevel: number, solverColor: SolverColor): string =>
   return ''
 }
 
-/** "BackRankMate" → "Back Rank Mate", "AttackingF2F7" → "Attacking f2/f7". */
-export const themeLabel = (theme: string): string => {
-  if (theme === 'AttackingF2F7') return 'Attacking f2/f7'
-  return theme.replace(/([a-z])([A-Z])/g, '$1 $2')
-}
-
 const NUMBER_WORDS = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']
 
 /** The solver's moves in the solution (it alternates solver/opponent, starting with the solver). */
