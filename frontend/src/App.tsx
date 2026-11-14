@@ -16,7 +16,7 @@ import type { Mode, Puzzle } from "./utils/constants.ts";
 import Footer from "./components/Footer.tsx";
 import { api } from "./api.ts";
 import SolvedCard from "./components/SolvedCard.tsx";
-import { playSolved, playTick, playWrong } from "./lib/sound.ts";
+import { playMove, playSolved, playTick, playWrong } from "./lib/sound.ts";
 
 const App = () => {
   const [mode, setMode] = useState<Mode>("daily");
@@ -98,6 +98,11 @@ const App = () => {
     // Only react to status transitions; streak changes right after solving and must not replay the chime.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game.status]);
+
+  // A knock for every move that lands on the board: setup move, player, opponent and replays.
+  useEffect(() => {
+    if (game.lastMove) playMove();
+  }, [game.lastMove]);
 
   // A gear tick for each correct move the machine then answers (the mating move gets the bell instead).
   useEffect(() => {

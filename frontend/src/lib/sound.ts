@@ -83,6 +83,13 @@ export const playTick = (): void => {
   gearClick(0.045, 0.12);
 };
 
+/** A piece set down on the board: a soft wooden knock. */
+export const playMove = (): void => {
+  if (isMuted()) return;
+  noise(0, 0.05, "lowpass", 1800, 0.35);
+  tone(220, 0, 0.08, "sine", 0.3, 120);
+};
+
 /** A muted mechanical clunk. */
 export const playWrong = (): void => {
   if (isMuted()) return;
