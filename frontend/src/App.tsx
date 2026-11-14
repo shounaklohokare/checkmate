@@ -206,6 +206,7 @@ const App = () => {
                     hasNext={hasNext}
                     onNext={handleNext}
                     onBrowse={() => setMode("library")}
+                    onRetry={game.reset}
                   />
                 )}
               </PuzzleBoard>

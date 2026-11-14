@@ -60,3 +60,16 @@ export const CheckIcon =({ className = '' }: { className?: string }) => (
     <path d="M3.5 8.5 6.5 11.5 12.5 4.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
+
+export const CloseIcon = ({ className = '' }: { className?: string }) => (
+  <svg viewBox="0 0 16 16" className={className} aria-hidden="true" focusable="false">
+    <path {...stroke} d="M4 4l8 8M12 4l-8 8" />
+  </svg>
+)
+
+// The Return key glyph, for the Enter shortcut hint.
+export const EnterIcon = ({ className = '' }: { className?: string }) => (
+  <svg viewBox="0 0 16 16" className={className} aria-hidden="true" focusable="false">
+    <path {...stroke} d="M12.5 3v4.5a2 2 0 0 1-2 2H3.5M6.5 6.5l-3 3 3 3" />
+  </svg>
+)

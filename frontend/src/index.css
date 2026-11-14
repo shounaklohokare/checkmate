@@ -521,19 +521,7 @@ body {
     border-radius: 999px;
   }
 
-  /* The solve moment: one success chip that scales in on the result card. */
-  .solved-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.3rem 0.7rem 0.3rem 0.55rem;
-    font-size: 0.8125rem;
-    font-weight: 700;
-    line-height: 1.2;
-    color: var(--color-accent-fg);
-    background: var(--color-success);
-    border-radius: 999px;
-  }
+  /* The solve moment: the result card's success badge scales in. */
   .chip-in { animation: chip-in 320ms var(--ease-out-heavy) 380ms both; }
 
   .slip-out { animation: slip-out 320ms var(--ease-out-heavy) 300ms both; }
@@ -604,6 +592,14 @@ body {
 }
 
 .animate-pop { animation: pop 320ms cubic-bezier(0.3, 0, 0.3, 1) both; }
+
+/* One success ring that spreads from the badge once it has landed. */
+@keyframes ring-out {
+  from { opacity: 0.7; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.75); }
+}
+
+.animate-ring { animation: ring-out 700ms var(--ease-out-heavy) 620ms both; }
 
 /* Reduced motion: state changes are instant; the chip stays as a static visual. */
 @media (prefers-reduced-motion: reduce) {
