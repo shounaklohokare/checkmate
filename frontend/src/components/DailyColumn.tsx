@@ -2,12 +2,11 @@ import { DailyColumnProps } from '../utils/constants'
 import Odometer from './Odometer'
 import PuzzleMeta from './PuzzleMeta'
 
-// Today's puzzle: the date and stipulation with a two-line how-to, and the progress ledger as three figures beneath.
+// Today's puzzle: the date and stipulation with a one-line how-to, and the progress ledger as three figures beneath.
 // Kept short so the whole Daily screen fits one viewport without scrolling.
 const DailyColumn = ({ puzzle, showCaption, solvedCount, streak, solvedToday }: DailyColumnProps) => {
   const now = new Date()
   const longDate = now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })
-  const kbd = 'rounded border border-line bg-sunken px-1 font-mono text-[0.8125rem] text-fg'
 
   return (
     <div className="flex flex-col gap-3">
@@ -23,15 +22,10 @@ const DailyColumn = ({ puzzle, showCaption, solvedCount, streak, solvedToday }: 
           </div>
         )}
 
-        {/* Short desktop windows drop the how-to so the column fits beside the board; the board's own help text stays. */}
+        {/* Short desktop windows drop the how-to so the column fits beside the board. */}
         <div className="mt-4 border-t border-line pt-4 lg:[@media(max-height:46rem)]:hidden">
           <h3 className="label">How to move</h3>
-          <ul className="mt-1.5 space-y-1 text-[0.9375rem] leading-snug text-fg-muted">
-            <li>Drag a piece, or tap it and then a lit square.</li>
-            <li>
-              Keys: <kbd className={kbd}>Tab</kbd> to the board, arrows to move, <kbd className={kbd}>Enter</kbd> to pick up and drop.
-            </li>
-          </ul>
+          <p className="mt-1.5 text-[0.9375rem] leading-snug text-fg-muted">Drag a piece, or tap it to see its moves, then tap where it should go.</p>
         </div>
       </article>
 

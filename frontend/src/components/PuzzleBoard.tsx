@@ -67,11 +67,10 @@ const PuzzleBoard = ({ game, children }: PuzzleBoardProps) => {
         }
       }
     }
-    add(input.cursor, 'sq-cursor')
     return cls
-  }, [lastMove, checkedKing, hintSquares, input.selected, input.targets, input.cursor, isSolved, mate])
+  }, [lastMove, checkedKing, hintSquares, input.selected, input.targets, isSolved, mate])
 
-  // react-chessboard makes every piece a tab stop; the board itself is the single keyboard control here.
+  // react-chessboard makes every piece a tab stop; the board is pointer-only, so take them out of the tab order.
   useEffect(() => {
     const root = boardRef.current
     if (!root) return
@@ -128,24 +127,11 @@ const PuzzleBoard = ({ game, children }: PuzzleBoardProps) => {
       </div>
 
       <div className="board-inlay">
-        <div
-          ref={boardRef}
-          className="board-input"
-          tabIndex={0}
-          role="application"
-          aria-label={`Chessboard, playing ${solverColor === 'white' ? 'White' : 'Black'}`}
-          aria-describedby="board-help"
-          {...input.handlers}
-        >
+        <div ref={boardRef} className="board-input">
           <Chessboard options={options} />
         </div>
         {children}
       </div>
-
-      <p id="board-help" className="sr-only">
-        Arrow keys move around the board. Enter or Space picks up a piece and puts it down. Escape cancels.
-      </p>
-      <p className="sr-only" aria-live="polite">{input.announcement}</p>
     </div>
   )
 }
