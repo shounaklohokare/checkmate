@@ -31,10 +31,8 @@ export interface PuzzleMetaProps {
   solved: boolean
   /** Set inside the Today's puzzle column: no panel of its own, and a level-3 heading. */
   inColumn?: boolean
-  /** The page fits the viewport: the description is clipped to two lines (one on short screens) so the page fits the viewport. */
+  /** The page fits the viewport: the caption tightens its padding and type on phones. */
   compact?: boolean
-  /** Daily mode leaves the description out so the screen stays uncluttered. */
-  showDescription?: boolean
 }
 
 /** Stamped pips out of three. */

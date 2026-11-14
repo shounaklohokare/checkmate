@@ -164,7 +164,6 @@ const App = () => {
       puzzle={activePuzzle}
       solved={activePuzzle ? solvedIds.has(activePuzzle.id) : false}
       compact
-      showDescription={mode === "library"}
     />
   );
 

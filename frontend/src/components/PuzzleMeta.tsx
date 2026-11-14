@@ -3,7 +3,7 @@ import { problemPrompt } from "../utils/utils.ts"
 import Pips from "./Pips.tsx"
 
 // The diagram caption, set the way problem books set it: number, then the stipulation.
-const PuzzleMeta = ({ puzzle, solved, inColumn = false, compact = false, showDescription = true }: PuzzleMetaProps) => {
+const PuzzleMeta = ({ puzzle, solved, inColumn = false, compact = false }: PuzzleMetaProps) => {
   if (!puzzle) return null
   const Heading = inColumn ? "h3" : "h2"
   return (
@@ -15,7 +15,6 @@ const PuzzleMeta = ({ puzzle, solved, inColumn = false, compact = false, showDes
         <Pips difficulty={puzzle.difficulty} />
         <span>Rated <span className="font-mono">{puzzle.rating}</span></span>
       </p>
-      {showDescription && <p className={`mt-1.5 max-w-prose text-[0.9375rem] leading-relaxed text-fg-muted ${compact ? "max-sm:hidden max-lg:line-clamp-2[@media(max-height:50rem)]:line-clamp-1 [@media(max-height:46rem)]:hidden!" : ""}`}>{puzzle.description}</p>}
       {solved && (
         <span className={`badge-solved absolute right-3 ${inColumn ? "top-0" : "top-3"}`}>Solved</span>
       )}
