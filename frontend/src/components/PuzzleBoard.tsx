@@ -35,7 +35,7 @@ const PuzzleBoard = ({ game, children }: PuzzleBoardProps) => {
     return { king, checkers: position.attackers(king, turn === 'w' ? 'b' : 'w') }
   }, [isSolved, position])
 
-  // A king in check (not mated) glows oxblood.
+  // A king in check (not mated) glows red.
   const checkedKing = useMemo(() => {
     if (mate || !position.inCheck()) return null
     return position.findPiece({ type: 'k', color: position.turn() })[0] ?? null
@@ -99,13 +99,13 @@ const PuzzleBoard = ({ game, children }: PuzzleBoardProps) => {
     showNotation: false,
     allowDrawingArrows: false,
     arrows: mate
-      ? mate.checkers.map((sq) => ({ startSquare: sq, endSquare: mate.king, color: 'oklch(0.86 0.11 90 / 0.9)' }))
+      ? mate.checkers.map((sq) => ({ startSquare: sq, endSquare: mate.king, color: 'oklch(0.78 0.135 232 / 0.9)' }))
       : [],
     allowDragging: canPlay,
     canDragPiece: ({ piece }: PieceHandlerArgs) => piece.pieceType[0] === own,
-    lightSquareStyle: { backgroundColor: 'var(--color-maple)' },
-    darkSquareStyle: { backgroundColor: 'var(--color-walnut)' },
-    dropSquareStyle: { boxShadow: 'inset 0 0 0 3px var(--color-brass-bright)' },
+    lightSquareStyle: { backgroundColor: 'var(--color-square-light)' },
+    darkSquareStyle: { backgroundColor: 'var(--color-square-dark)' },
+    dropSquareStyle: { boxShadow: 'inset 0 0 0 3px var(--color-accent)' },
     squareRenderer: ({ square, children: piece }: SquareHandlerArgs & { children?: ReactNode }) => (
       <div className={`sq ${(squareClasses[square as Square] ?? []).join(' ')}`}>{piece}</div>
     ),
@@ -121,7 +121,7 @@ const PuzzleBoard = ({ game, children }: PuzzleBoardProps) => {
   const ranks = solverColor === 'white' ? RANKS.split('').reverse() : RANKS.split('')
 
   return (
-    <div className={`bezel board-size ${status === 'wrong-flash' ? 'animate-clunk' : ''}`}>
+    <div className={`board-frame board-size ${status === 'wrong-flash' ? 'animate-clunk' : ''}`}>
       <div className="coords coords-files" aria-hidden="true">
         {files.map((f) => <span key={f}>{f}</span>)}
       </div>
@@ -129,7 +129,7 @@ const PuzzleBoard = ({ game, children }: PuzzleBoardProps) => {
         {ranks.map((r) => <span key={r}>{r}</span>)}
       </div>
 
-      <div className={`inlay ${celebrate ? 'solved-fx' : ''}`}>
+      <div className={`board-inlay ${celebrate ? 'solved-fx' : ''}`}>
         <div
           ref={boardRef}
           className="board-input"

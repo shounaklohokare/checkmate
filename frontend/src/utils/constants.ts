@@ -52,11 +52,11 @@ export const STATUS_TEXT: Record<GameStatus, string> = {
 }
 
 export const STATUS_COLOR: Record<GameStatus, string> = {
-  playing: 'text-ivory',
-  'correct-flash': 'text-verdigris',
-  'wrong-flash': 'text-oxblood-bright',
-  solved: 'text-brass-bright',
-  replaying: 'text-ivory-dim',
+  playing: 'text-fg',
+  'correct-flash': 'text-success',
+  'wrong-flash': 'text-danger',
+  solved: 'text-success',
+  replaying: 'text-fg-muted',
 }
 
 /** Indicator lamp beside the status line. */

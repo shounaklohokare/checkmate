@@ -2,62 +2,55 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Checkmate — the cabinet's colours in a contemporary build: flat surfaces, soft depth, one grotesk.
-   Light still comes from above: highlights sit on top edges, shadows fall below. */
+/* Checkmate: cool slate surfaces, hairline edges, one sky accent. Shadows are soft and fall straight down. */
 @theme {
   --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, monospace;
 
-  /* Surfaces: mahogany, soot for the deepest shadow */
-  --color-soot: oklch(0.16 0.012 45);
-  --color-mahogany-950: oklch(0.2 0.03 32);
-  --color-mahogany-900: oklch(0.245 0.045 32);
-  --color-mahogany-800: oklch(0.3 0.06 33);
-  --color-mahogany-700: oklch(0.37 0.075 35);
-  --color-mahogany-600: oklch(0.45 0.085 38);
+  /* Surfaces, darkest to lightest */
+  --color-sunken: oklch(0.14 0.008 260);
+  --color-canvas: oklch(0.165 0.01 260);
+  --color-surface: oklch(0.205 0.012 260);
+  --color-raised: oklch(0.245 0.014 260);
+  --color-raised-hover: oklch(0.285 0.016 260);
 
-  /* The board: maple and walnut */
-  --color-maple: oklch(0.88 0.05 80);
-  --color-walnut: oklch(0.57 0.075 58);
-  --color-ebony: oklch(0.2 0.015 50);
+  /* Edges */
+  --color-line: oklch(1 0 0 / 0.09);
+  --color-line-strong: oklch(1 0 0 / 0.17);
 
-  /* Metals */
-  --color-brass-deep: oklch(0.5 0.085 78);
-  --color-brass: oklch(0.74 0.115 84);
-  --color-brass-bright: oklch(0.86 0.11 90);
-  --color-copper: oklch(0.62 0.13 48);
-  --color-verdigris: oklch(0.72 0.085 172);
-  --color-verdigris-deep: oklch(0.42 0.06 178);
+  /* Text */
+  --color-fg: oklch(0.97 0.003 260);
+  --color-fg-muted: oklch(0.78 0.012 260);
+  --color-fg-subtle: oklch(0.66 0.014 260);
 
-  /* Paper and text */
-  --color-parchment: oklch(0.925 0.035 86);
-  --color-parchment-deep: oklch(0.85 0.05 80);
-  --color-ivory: oklch(0.965 0.018 90);
-  --color-ivory-dim: oklch(0.82 0.03 80);
-  --color-ink: oklch(0.25 0.03 45);
-  --color-ink-soft: oklch(0.4 0.04 50);
+  /* The one accent: primary action, selection, hint, focus */
+  --color-accent: oklch(0.78 0.135 232);
+  --color-accent-hover: oklch(0.85 0.11 230);
+  --color-accent-fg: oklch(0.2 0.04 250);
 
-  /* Error, check */
-  --color-oxblood: oklch(0.42 0.13 25);
-  --color-oxblood-bright: oklch(0.73 0.14 30);
+  /* Signals */
+  --color-success: oklch(0.78 0.15 155);
+  --color-danger: oklch(0.72 0.17 25);
 
-  --ease-mech: cubic-bezier(0.2, 0.9, 0.3, 1.04);
+  /* The board */
+  --color-square-light: oklch(0.87 0.012 250);
+  --color-square-dark: oklch(0.6 0.032 250);
+
   --ease-out-heavy: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 :root {
   color-scheme: dark;
-  --focus: var(--color-brass-bright);
-  --focus-glow: oklch(0.86 0.11 90 / 0.3);
-  --shadow-soft: 0 12px 32px -14px oklch(0.08 0.01 40 / 0.75);
-  --hairline: oklch(1 0 0 / 0.07);
-  --brass-face: linear-gradient(180deg, oklch(0.8 0.11 87), var(--color-brass) 55%, oklch(0.7 0.11 82));
+  --focus: var(--color-accent);
+  --focus-glow: oklch(0.78 0.135 232 / 0.28);
+  --shadow-soft: 0 10px 28px -14px oklch(0.05 0.01 260 / 0.8);
+  --hairline: var(--color-line);
 }
 
 html {
   color-scheme: dark;
-  scrollbar-color: var(--color-mahogany-600) var(--color-mahogany-950);
+  scrollbar-color: var(--color-raised-hover) var(--color-canvas);
 }
 
 body {
@@ -66,22 +59,19 @@ body {
   font-family: var(--font-sans);
   font-size: 1rem;
   line-height: 1.55;
-  color: var(--color-ivory);
-  background-color: var(--color-mahogany-950);
-  background-image:
-    radial-gradient(90% 60% at 20% -10%, oklch(0.33 0.07 34 / 0.55), transparent 65%),
-    radial-gradient(80% 60% at 100% 110%, oklch(0.28 0.06 33 / 0.45), transparent 60%);
-  background-attachment: fixed;
+  color: var(--color-fg);
+  background-color: var(--color-canvas);
   -webkit-font-smoothing: antialiased;
+  caret-color: var(--color-accent);
 }
 
 ::selection {
-  background: var(--color-brass);
-  color: var(--color-ink);
+  background: var(--color-accent);
+  color: var(--color-accent-fg);
 }
 
 @layer base {
-  /* In the base layer so component-level focus treatments (the board, keys) can override it. */
+  /* In the base layer so component-level focus treatments (the board, buttons) can override it. */
   :focus-visible {
     outline: 2px solid var(--focus);
     outline-offset: 3px;
@@ -103,186 +93,118 @@ body {
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-mahogany-600);
+  background: var(--color-raised-hover);
   border-radius: 5px;
-  border: 2px solid var(--color-mahogany-950);
+  border: 2px solid var(--color-canvas);
 }
 
 @layer components {
   /* ---------- Surfaces ---------- */
 
-  .site-header::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -1px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--color-verdigris) 22%, var(--color-brass-bright) 55%, transparent);
-    box-shadow: 0 0 14px 1px oklch(0.72 0.085 172 / 0.55);
-    pointer-events: none;
-  }
-
-  .brand-mark {
-    width: 0.875rem;
-    height: 0.875rem;
-    clip-path: polygon(30% 0, 100% 0, 100% 70%, 70% 100%, 0 100%, 0 30%);
-    background: var(--color-verdigris);
-    box-shadow: 0 0 12px oklch(0.72 0.085 172 / 0.9);
-    filter: drop-shadow(0 0 6px oklch(0.72 0.085 172 / 0.7));
-  }
-
-  .wordmark-cursor {
-    display: inline-block;
-    width: 0.5em;
-    height: 0.1em;
-    margin-left: 0.2em;
-    background: var(--color-verdigris);
-    box-shadow: 0 0 8px var(--color-verdigris);
-    animation: cursor-blink 1.1s steps(2, jump-none) infinite;
-  }
-
-  .plate {
-    position: relative;
-    color: var(--color-ink);
-    background: var(--brass-face);
-    border-radius: 14px;
-    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.35), var(--shadow-soft);
-  }
-
-  .engraved { color: var(--color-ink); }
+  .site-header { border-bottom: 1px solid var(--hairline); }
 
   /* Small labels that name a control. */
-  .label-cab {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
+  .label {
+    font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--color-brass);
-  }
-
-  .paper {
-    --focus: var(--color-oxblood);
-    --focus-glow: oklch(0.42 0.13 25 / 0.2);
-    color: var(--color-ink);
-    background: var(--color-parchment);
-    border-radius: 16px;
-    box-shadow: inset 0 0 0 1px oklch(0.8 0.05 78 / 0.5), var(--shadow-soft);
-  }
-
-  .well {
-    background: oklch(0.18 0.022 33);
-    border-radius: 16px;
-    box-shadow: inset 0 0 0 1px var(--hairline), inset 0 2px 6px oklch(0.08 0.01 40 / 0.5);
+    letter-spacing: 0.02em;
+    color: var(--color-fg-muted);
   }
 
   .panel {
-    background: var(--color-mahogany-900);
-    border-radius: 16px;
-    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.05), inset 0 0 0 1px var(--hairline), var(--shadow-soft);
+    background: var(--color-surface);
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
   }
 
   /* ---------- Buttons ---------- */
 
-  .key {
+  .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     min-height: 2.75rem;
-    padding: 0.5rem 1.05rem;
+    padding: 0.5rem 1rem;
     font-size: 0.9375rem;
     font-weight: 600;
-    color: var(--color-ivory);
-    background: var(--color-mahogany-700);
-    border: 0;
-    border-radius: 11px;
-    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.1), inset 0 0 0 1px oklch(1 0 0 / 0.05), 0 2px 6px oklch(0.08 0.01 40 / 0.45);
+    color: var(--color-fg);
+    background: var(--color-raised);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
     cursor: pointer;
-    transition: background-color 150ms, transform 90ms var(--ease-out-heavy), box-shadow 90ms;
+    transition: background-color 150ms, border-color 150ms, transform 90ms var(--ease-out-heavy);
   }
 
-  .key:hover:not(:disabled) { background: var(--color-mahogany-600); }
+  .btn:hover:not(:disabled) { background: var(--color-raised-hover); border-color: var(--color-line-strong); }
+  .btn:active:not(:disabled) { transform: translateY(1px); }
 
-  .key:active:not(:disabled) {
-    transform: translateY(1px);
-    box-shadow: inset 0 1px 3px oklch(0.08 0.01 40 / 0.5);
-  }
-
-  .key:disabled {
+  .btn:disabled {
     cursor: not-allowed;
-    opacity: 0.4;
+    color: var(--color-fg-subtle);
+    background: transparent;
   }
 
-  .key-brass {
-    color: var(--color-ink);
-    background: var(--brass-face);
-    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.4), 0 4px 14px -4px oklch(0.74 0.115 84 / 0.45);
+  .btn-primary {
+    color: var(--color-accent-fg);
+    background: var(--color-accent);
+    border-color: transparent;
   }
 
-  .key-brass:hover:not(:disabled) { background: var(--color-brass-bright); }
-
-  .key-square {
-    min-width: 2.75rem;
-    padding: 0;
-  }
+  .btn-primary:hover:not(:disabled) { background: var(--color-accent-hover); border-color: transparent; }
 
   /* ---------- Segmented control (mode, difficulty) over real radios ---------- */
 
-  .lever {
+  .segmented {
     --n: 2;
     --i: 0;
     position: relative;
     display: grid;
     grid-template-columns: repeat(var(--n), 1fr);
-    padding: 4px;
+    padding: 3px;
     margin: 0;
-    border: 0;
     min-width: 12.5rem;
-    border-radius: 8px;
-    background: oklch(0.15 0.02 33);
-    box-shadow: inset 0 0 0 1px oklch(0.72 0.085 172 / 0.25);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    background: var(--color-sunken);
   }
 
-  .lever:has(:focus-visible) {
+  .segmented:has(:focus-visible) {
     outline: 2px solid var(--focus);
     outline-offset: 3px;
     box-shadow: 0 0 0 5px var(--focus-glow);
   }
 
-  .lever-shoe {
+  .segmented-thumb {
     position: absolute;
-    top: 4px;
-    bottom: 4px;
-    left: 4px;
-    width: calc((100% - 8px) / var(--n));
-    border-radius: 5px;
-    background: var(--brass-face);
-    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.4), 0 0 14px oklch(0.74 0.115 84 / 0.45);
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: calc((100% - 6px) / var(--n));
+    border-radius: 7px;
+    background: var(--color-raised-hover);
+    box-shadow: inset 0 0 0 1px var(--color-line-strong), 0 1px 3px oklch(0.05 0.01 260 / 0.5);
     transform: translateX(calc(100% * var(--i)));
-    transition: transform 280ms var(--ease-out-heavy);
+    transition: transform 220ms var(--ease-out-heavy);
   }
 
-  .lever-option {
+  .segmented-option {
     position: relative;
     z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 2.25rem;
-    padding: 0 0.875rem;
-    font-size: 0.8125rem;
+    padding: 0 0.75rem;
+    font-size: 0.875rem;
     font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--color-ivory-dim);
+    color: var(--color-fg-muted);
     cursor: pointer;
-    transition: color 200ms;
+    transition: color 150ms;
   }
 
-  .lever-option:has(:checked) { color: var(--color-ink); }
-  .lever-option:not(:has(:checked)):hover { color: var(--color-ivory); }
+  .segmented-option:has(:checked) { color: var(--color-fg); }
+  .segmented-option:not(:has(:checked)):hover { color: var(--color-fg); }
 
   /* ---------- Switch (sound) ---------- */
 
@@ -304,12 +226,12 @@ body {
 
   .toggle-base {
     position: relative;
-    width: 2.625rem;
+    width: 2.5rem;
     height: 1.5rem;
     border-radius: 999px;
-    background: var(--color-mahogany-700);
-    box-shadow: inset 0 1px 3px oklch(0.06 0.01 40 / 0.6), inset 0 0 0 1px var(--hairline);
-    transition: background-color 200ms;
+    background: var(--color-raised-hover);
+    box-shadow: inset 0 0 0 1px var(--color-line-strong);
+    transition: background-color 180ms;
   }
 
   .toggle-bat {
@@ -319,65 +241,80 @@ body {
     width: 1.125rem;
     height: 1.125rem;
     border-radius: 50%;
-    background: var(--color-ivory);
-    box-shadow: 0 1px 3px oklch(0.06 0 0 / 0.6);
-    transition: transform 220ms var(--ease-out-heavy);
+    background: var(--color-fg);
+    box-shadow: 0 1px 2px oklch(0.05 0 0 / 0.5);
+    transition: transform 200ms var(--ease-out-heavy);
   }
 
-  .toggle input:checked ~ .toggle-base { background: var(--color-verdigris-deep); box-shadow: inset 0 0 0 1px var(--color-verdigris), 0 0 12px oklch(0.72 0.085 172 / 0.55); }
-  .toggle input:checked ~ .toggle-base .toggle-bat { background: var(--color-verdigris); }
-  .toggle input:checked ~ .toggle-base .toggle-bat { transform: translateX(1.125rem); }
+  .toggle input:checked ~ .toggle-base { background: var(--color-accent); box-shadow: none; }
+  .toggle input:checked ~ .toggle-base .toggle-bat { transform: translateX(1rem); background: var(--color-accent-fg); }
 
-  /* ---------- Select ---------- */
-
-  .select-window {
-    appearance: none;
-    width: 100%;
-    min-height: 2.75rem;
-    padding: 0.5rem 2.25rem 0.5rem 0.875rem;
-    font-family: var(--font-sans);
-    font-size: 0.9375rem;
-    font-weight: 500;
-    color: var(--color-ivory);
-    background:
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23e9cf86' stroke-width='2'/></svg>") right 0.875rem center / 12px 8px no-repeat,
-      oklch(0.17 0.022 33);
-    border: 0;
-    border-radius: 11px;
-    box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.1);
-    cursor: pointer;
-  }
-
-  .select-window:hover { box-shadow: inset 0 0 0 1px oklch(0.74 0.115 84 / 0.5); }
-
-  .select-window option {
-    background: var(--color-mahogany-900);
-    color: var(--color-ivory);
-  }
-
-  /* ---------- The board ---------- */
+  /* ---------- Layout: the board column ---------- */
 
   .board-size {
     width: min(100%, max(18rem, calc(100svh - 17.5rem)), 38rem);
   }
 
-  .bezel {
-    --bz: 1.375rem;
+  /* Library mode: the board takes whatever height the column has left, so the page never scrolls. */
+  .board-fit {
+    display: flex;
+    flex: 0 1 auto;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 1;
+    min-height: 15rem;
+    container-type: size;
+  }
+  .board-fit .board-size { width: min(100cqw, 100cqh); }
+
+  /* Desktop board column: the controls live in the side column, so the board is as wide as the height left after
+     the header, the main padding and the footer (capped so board + side column fit the 78rem shell). */
+  @media (min-width: 64rem) {
+    .board-col-fit { width: min(44rem, calc(100dvh - 9rem)); }
+  }
+  /* Short desktop windows: slim the frame. */
+  @media (min-width: 64rem) and (max-height: 43.5rem) {
+    .board-frame { --bz: 1rem; }
+  }
+
+  /* Landscape phones: stacking would leave the board a sliver, so it sits beside the controls and caption,
+     sized from the height left after the header, the drawer handle and the padding.
+     (!important: the section's flex/gap/width utilities would otherwise win over this layer.) */
+  @media (orientation: landscape) and (max-height: 32rem) and (width < 64rem) {
+    .play-area {
+      display: grid !important;
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-rows: auto auto 1fr;
+      align-items: start;
+      column-gap: 1rem !important;
+      width: 100% !important;
+    }
+    .play-area > .board-fit,
+    .play-area .board-frame { grid-row: 1 / -1; }
+    .play-area .board-fit { display: block; width: auto; aspect-ratio: auto; min-height: 0; container-type: normal; }
+    .play-area .board-frame { width: calc(100svh - 9.25rem); }
+  }
+
+  /* ---------- The board ---------- */
+
+  .board-frame {
+    --bz: 1.25rem;
     position: relative;
     padding: var(--bz);
-    border-radius: 18px;
-    background: var(--brass-face);
-    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.4), 0 24px 48px -18px oklch(0.06 0.01 40 / 0.85);
+    border-radius: 14px;
+    background: var(--color-surface);
+    border: 1px solid var(--hairline);
+    box-shadow: var(--shadow-soft);
   }
 
   .coords {
     position: absolute;
     display: grid;
-    font-size: 0.75rem;
-    font-weight: 700;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
     line-height: 1;
-    text-transform: uppercase;
-    color: oklch(0.3 0.05 60);
+    color: var(--color-fg-subtle);
     pointer-events: none;
     user-select: none;
   }
@@ -386,27 +323,25 @@ body {
   .coords-ranks { top: calc(var(--bz) + 2px); bottom: calc(var(--bz) + 2px); left: calc(var(--bz) / 2 - 0.4rem); width: 0.8rem; grid-template-rows: repeat(8, 1fr); }
 
   @media (max-width: 40rem) {
-    .bezel { --bz: 1.125rem; border-radius: 14px; }
-    .coords { font-size: 0.6875rem; }
+    .board-frame { --bz: 1rem; border-radius: 12px; }
+    .coords { font-size: 0.625rem; }
   }
 
-  .inlay {
+  .board-inlay {
     position: relative;
-    padding: 2px;
-    background: oklch(0.3 0.05 60 / 0.5);
     border-radius: 6px;
   }
 
   .board-input {
     position: relative;
-    border-radius: 4px;
+    border-radius: 6px;
     overflow: hidden;
   }
   .board-input:focus-visible {
     overflow: visible;
-    outline: 3px solid var(--color-verdigris);
+    outline: 3px solid var(--color-accent);
     outline-offset: 3px;
-    box-shadow: 0 0 0 6px oklch(0.18 0.02 45 / 0.85);
+    box-shadow: 0 0 0 6px var(--color-surface);
   }
 
   /* Square overlays (rendered through react-chessboard's squareRenderer). */
@@ -427,51 +362,51 @@ body {
   .sq::before { z-index: 0; }
   .sq::after { z-index: 2; }
 
-  /* Last move: a brass wash. */
+  /* Last move: an accent wash. */
   .sq-last::before {
     opacity: 1;
-    background: oklch(0.86 0.13 88 / 0.5);
+    background: oklch(0.78 0.135 232 / 0.38);
   }
 
-  /* Selected piece: a stronger brass wash with a soft ring. */
+  /* Selected piece: a stronger wash with a ring. */
   .sq-selected::before {
     opacity: 1;
-    background: oklch(0.84 0.14 85 / 0.75);
-    box-shadow: inset 0 0 0 2px oklch(0.6 0.12 72 / 0.7);
+    background: oklch(0.78 0.135 232 / 0.58);
+    box-shadow: inset 0 0 0 2px oklch(0.55 0.13 240 / 0.8);
   }
 
   /* Legal destinations: dots; captures: a ring. */
   .sq-target::before {
     opacity: 1;
-    background: radial-gradient(circle, oklch(0.25 0.03 45 / 0.32) 0 15%, transparent 16.5%);
+    background: radial-gradient(circle, oklch(0.2 0.03 260 / 0.34) 0 15%, transparent 16.5%);
   }
   .sq-capture::before {
     opacity: 1;
-    background: radial-gradient(circle, transparent 0 66%, oklch(0.25 0.03 45 / 0.32) 67% 78%, transparent 79%);
+    background: radial-gradient(circle, transparent 0 66%, oklch(0.2 0.03 260 / 0.34) 67% 78%, transparent 79%);
   }
 
-  /* Hint: a lit brass ring. */
+  /* Hint: an accent ring that breathes. */
   .sq-hint::after {
     opacity: 1;
-    box-shadow: inset 0 0 0 2px var(--color-copper), inset 0 0 0 5px var(--color-brass-bright), inset 0 0 16px oklch(0.86 0.14 85 / 0.8);
+    box-shadow: inset 0 0 0 3px var(--color-accent), inset 0 0 0 5px oklch(0.2 0.04 250 / 0.5);
     animation: lamp-pulse 1.6s ease-in-out infinite;
   }
 
   /* Keyboard cursor. */
   .sq-cursor::after {
     opacity: 1;
-    box-shadow: inset 0 0 0 2px var(--color-ink), inset 0 0 0 5px var(--color-verdigris);
+    box-shadow: inset 0 0 0 2px var(--color-canvas), inset 0 0 0 5px var(--color-fg);
   }
 
-  /* Check: an oxblood glow under the king. */
+  /* Check: a red glow under the king. */
   .sq-check::before {
     opacity: 1;
-    background: radial-gradient(circle, oklch(0.62 0.2 27 / 0.95) 0 25%, oklch(0.52 0.18 25 / 0.55) 52%, transparent 78%);
+    background: radial-gradient(circle, oklch(0.64 0.21 25 / 0.95) 0 25%, oklch(0.55 0.19 25 / 0.55) 52%, transparent 78%);
   }
 
   .sq-checker::after {
     opacity: 1;
-    box-shadow: inset 0 0 0 4px var(--color-brass-bright);
+    box-shadow: inset 0 0 0 4px var(--color-accent);
   }
 
   .sq-mated::before { animation: mated-king 600ms ease-in-out 150ms 2 both; }
@@ -482,39 +417,17 @@ body {
   .lamp {
     position: relative;
     flex: none;
-    width: 0.625rem;
-    height: 0.625rem;
+    width: 0.5rem;
+    height: 0.5rem;
     border-radius: 50%;
-    background: var(--color-mahogany-600);
-    transition: background-color 150ms, box-shadow 150ms;
+    background: var(--color-fg-subtle);
+    transition: background-color 150ms;
   }
-  .lamp-idle { background: var(--color-brass); box-shadow: 0 0 0 4px oklch(0.74 0.115 84 / 0.18); }
-  .lamp-ok { background: var(--color-verdigris); box-shadow: 0 0 0 4px oklch(0.72 0.085 172 / 0.22), 0 0 12px oklch(0.72 0.085 172 / 0.7); }
-  .lamp-bad { background: oklch(0.65 0.2 27); box-shadow: 0 0 0 4px oklch(0.65 0.2 27 / 0.25), 0 0 12px oklch(0.65 0.2 27 / 0.75); }
-  .lamp-solved { background: var(--color-brass-bright); box-shadow: 0 0 0 4px oklch(0.86 0.11 90 / 0.25), 0 0 14px oklch(0.86 0.12 88 / 0.8); }
+  .lamp-idle { background: var(--color-accent); }
+  .lamp-ok { background: var(--color-success); }
+  .lamp-bad { background: var(--color-danger); }
+  .lamp-solved { background: var(--color-success); }
   .lamp-busy { animation: lamp-blink 700ms ease-in-out infinite alternate; }
-
-  .gear { transform-origin: 50% 50%; }
-  .gear-spin { animation: gear-spin 1.4s linear infinite; }
-  .gear-lock { animation: gear-lock 420ms var(--ease-mech) both; }
-
-  .bell { transform-origin: 50% 8%; }
-  .bell-ring { animation: bell-swing 700ms ease-out 220ms both; }
-
-  .steam {
-    position: absolute;
-    bottom: 60%;
-    left: 50%;
-    width: 1.125rem;
-    height: 1.125rem;
-    margin-left: -0.5625rem;
-    border-radius: 50%;
-    background: radial-gradient(circle, oklch(0.98 0.01 90 / 0.85), oklch(0.95 0.01 90 / 0.4) 45%, transparent 72%);
-    filter: blur(1px);
-    opacity: 0;
-    pointer-events: none;
-    animation: steam-puff 900ms ease-out both;
-  }
 
   /* ---------- Odometer ---------- */
 
@@ -547,43 +460,62 @@ body {
     height: 1.3em;
   }
 
-  /* ---------- Gauge ---------- */
+  /* ---------- Streak ---------- */
 
-  .streak-chip {
+  .streak-pill {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    min-height: 2.5rem;
-    padding: 0 0.875rem;
-    border-radius: 8px;
-    background: oklch(0.15 0.02 33);
-    box-shadow: inset 0 0 0 1px oklch(0.72 0.085 172 / 0.4), 0 0 14px oklch(0.72 0.085 172 / 0.15);
+    gap: 0.4375rem;
+    min-height: 2.25rem;
+    padding: 0 0.875rem 0 0.6875rem;
+    border-radius: 999px;
+    background: var(--color-surface);
+    border: 1px solid var(--hairline);
   }
+
+  /* Unlit until there is a streak to keep. */
+  .streak-flame { fill: var(--color-fg-subtle); transition: fill 300ms; }
+  .streak-pill[data-alive="true"] .streak-flame { fill: var(--color-accent); }
 
   /* ---------- Puzzle cards ---------- */
 
-  .index-card {
+  .puzzle-card {
     position: relative;
     display: block;
     width: 100%;
+    padding: 0.75rem 0.875rem;
     text-align: left;
-    color: var(--color-ink);
-    background: var(--color-parchment);
-    border-radius: 12px;
-    box-shadow: inset 0 0 0 1px oklch(0.8 0.05 78 / 0.5), 0 2px 6px oklch(0.06 0.01 40 / 0.4);
+    color: var(--color-fg);
+    background: var(--color-surface);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
     cursor: pointer;
-    transition: transform 200ms var(--ease-out-heavy), box-shadow 200ms;
-    --focus: var(--color-brass-bright);
+    transition: background-color 150ms, border-color 150ms, transform 180ms var(--ease-out-heavy), box-shadow 180ms;
   }
-  .index-card:hover { transform: translateY(-1px); box-shadow: inset 0 0 0 1px oklch(0.8 0.05 78 / 0.5), 0 8px 18px -6px oklch(0.06 0.01 40 / 0.6); }
-  .index-card[aria-current="true"] {
-    box-shadow: inset 0 0 0 1px oklch(0.8 0.05 78 / 0.5), 0 0 0 2px var(--color-brass), 0 8px 18px -6px oklch(0.06 0.01 40 / 0.6);
+  .puzzle-card:hover {
+    background: var(--color-raised);
+    border-color: var(--color-line-strong);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px -8px oklch(0.05 0.01 260 / 0.8);
+  }
+  .puzzle-card[aria-current="true"] {
+    background: var(--color-raised);
+    border-color: var(--color-accent);
+    box-shadow: inset 0 0 0 1px var(--color-accent);
+  }
+
+  /* Short screens: tighter cards so all eight fit without the page scrolling. */
+  @media (max-height: 50rem) {
+    .puzzle-card { padding-block: 0.5rem; }
+  }
+  @media (max-width: 40rem) {
+    .puzzle-card { padding: 0.5rem 0.75rem; }
   }
 
   .pip {
     display: inline-block;
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 0.4375rem;
+    height: 0.4375rem;
     border-radius: 50%;
     border: 1.5px solid currentColor;
   }
@@ -592,41 +524,40 @@ body {
   .badge-solved {
     display: inline-flex;
     align-items: center;
+    gap: 0.25rem;
     padding: 0.125rem 0.5rem;
     font-size: 0.75rem;
     font-weight: 600;
     line-height: 1.4;
-    color: var(--color-verdigris-deep);
-    background: oklch(0.72 0.085 172 / 0.22);
+    color: var(--color-success);
+    background: oklch(0.78 0.15 155 / 0.14);
     border-radius: 999px;
   }
 
-  /* The one stamp: it lands on the solved slip. */
-  .stamp {
-    display: inline-block;
-    padding: 0.2em 0.6em;
-    font-family: var(--font-sans);
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    line-height: 1.1;
-    text-transform: uppercase;
-    color: var(--color-oxblood);
-    border: 2.5px solid currentColor;
-    border-radius: 8px;
-    rotate: -6deg;
-    opacity: 0.92;
+  /* The solve moment: one success chip that scales in on the result card. */
+  .solved-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.3rem 0.7rem 0.3rem 0.55rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--color-accent-fg);
+    background: var(--color-success);
+    border-radius: 999px;
   }
-  .stamp-slam { animation: stamp-slam 240ms cubic-bezier(0.3, 0, 0.2, 1) 680ms both; }
+  .chip-in { animation: chip-in 320ms var(--ease-out-heavy) 380ms both; }
 
-  .slip-out { animation: slip-out 360ms var(--ease-out-heavy) 360ms both; }
+  .slip-out { animation: slip-out 320ms var(--ease-out-heavy) 300ms both; }
 
   /* ---------- Mobile drawer ---------- */
 
   .drawer-sheet {
-    transition: translate 340ms var(--ease-out-heavy), visibility 0s linear 340ms;
+    transition: translate 320ms var(--ease-out-heavy), visibility 0s linear 320ms;
   }
   .drawer-sheet[data-open="true"] {
-    transition: translate 340ms var(--ease-out-heavy), visibility 0s;
+    transition: translate 320ms var(--ease-out-heavy), visibility 0s;
   }
 
   .drawer-pull {
@@ -636,7 +567,7 @@ body {
     height: 4px;
     margin: 0 auto;
     border-radius: 999px;
-    background: oklch(1 0 0 / 0.25);
+    background: var(--color-line-strong);
   }
 }
 
@@ -651,78 +582,49 @@ body {
   100% { transform: translateX(0); }
 }
 
-@keyframes cursor-blink {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-@keyframes gear-spin { to { transform: rotate(360deg); } }
-
-@keyframes gear-lock {
-  0% { transform: rotate(0deg); }
-  70% { transform: rotate(64deg); }
-  100% { transform: rotate(60deg); }
-}
-
-@keyframes bell-swing {
-  0% { transform: rotate(0deg); }
-  15% { transform: rotate(14deg); }
-  35% { transform: rotate(-10deg); }
-  55% { transform: rotate(6deg); }
-  75% { transform: rotate(-2deg); }
-  100% { transform: rotate(0deg); }
-}
-
-@keyframes steam-puff {
-  0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
-  20% { opacity: 1; }
-  100% { opacity: 0; transform: translate(var(--dx, 0px), -2.25rem) scale(2.4); }
-}
-
-@keyframes stamp-slam {
-  0% { opacity: 0; transform: scale(1.5); }
-  70% { opacity: 1; transform: scale(0.97); }
-  100% { opacity: 0.92; transform: scale(1); }
+@keyframes chip-in {
+  0% { opacity: 0; transform: scale(0.6); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 @keyframes slip-out {
-  from { opacity: 0; transform: translateY(1rem); }
+  from { opacity: 0; transform: translateY(0.75rem); }
   to { opacity: 1; transform: none; }
 }
 
 @keyframes lamp-pulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+  50% { opacity: 0.65; }
 }
 
 @keyframes lamp-blink {
   from { opacity: 1; }
-  to { opacity: 0.45; }
+  to { opacity: 0.4; }
 }
 
 @keyframes square-dim {
-  from { background: oklch(0.1 0.01 40 / 0); opacity: 1; }
-  to { background: oklch(0.1 0.01 40 / 0.4); opacity: 1; }
+  from { background: oklch(0.1 0.01 260 / 0); opacity: 1; }
+  to { background: oklch(0.1 0.01 260 / 0.42); opacity: 1; }
 }
 
 @keyframes mated-king {
-  0% { opacity: 1; background: oklch(0.42 0.13 25 / 0); }
-  50% { opacity: 1; background: oklch(0.42 0.13 25 / 0.9); }
-  100% { opacity: 1; background: radial-gradient(circle, oklch(0.6 0.2 27 / 0.9) 0 30%, oklch(0.42 0.13 25 / 0.75) 75%); }
+  0% { opacity: 1; background: oklch(0.55 0.19 25 / 0); }
+  50% { opacity: 1; background: oklch(0.55 0.19 25 / 0.9); }
+  100% { opacity: 1; background: radial-gradient(circle, oklch(0.64 0.21 25 / 0.9) 0 30%, oklch(0.5 0.17 25 / 0.75) 75%); }
 }
 
 .animate-clunk { animation: clunk 260ms cubic-bezier(0.3, 0, 0.3, 1) both; }
 
 /* Keep pieces legible on the dimmed board: outline each piece in its opposite colour. */
 .solved-fx [data-piece^="b"] {
-  filter: drop-shadow(0 0 1px oklch(0.965 0.018 90 / 0.9)) drop-shadow(0 0 3px oklch(0.965 0.018 90 / 0.4));
+  filter: drop-shadow(0 0 1px oklch(0.97 0.003 260 / 0.9)) drop-shadow(0 0 3px oklch(0.97 0.003 260 / 0.4));
 }
 
 .solved-fx [data-piece^="w"] {
-  filter: drop-shadow(0 0 1px oklch(0.2 0.02 45 / 0.9));
+  filter: drop-shadow(0 0 1px oklch(0.17 0.01 260 / 0.9));
 }
 
-/* Reduced motion: state changes are instant; the stamp and bell stay as static visuals, steam is skipped. */
+/* Reduced motion: state changes are instant; the chip stays as a static visual. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -733,5 +635,4 @@ body {
     transition-duration: 1ms !important;
     transition-delay: 0ms !important;
   }
-  .steam { display: none; }
 }
