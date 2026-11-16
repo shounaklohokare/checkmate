@@ -44,10 +44,10 @@ const SolvedCard = ({ fen, attempts, revealed, streak, hasNext, onNext, onBrowse
 
   return (
     <div className="slip-out @container absolute inset-x-2 bottom-2 z-30 rounded-xl border border-line-strong bg-raised shadow-[inset_0_1px_0_oklch(1_0_0/0.05),0_2px_6px_oklch(0.05_0.01_260/0.35),0_20px_44px_-16px_oklch(0.05_0.01_260/0.9)] sm:inset-x-3 sm:bottom-3">
-      <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-3.5 p-3.5 @min-[38rem]:grid-cols-[auto_minmax(0,1fr)_auto_auto] @min-[38rem]:gap-x-4 @min-[38rem]:py-4 @min-[38rem]:pl-4 @min-[38rem]:pr-3">
+      <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-2.5 gap-y-3 p-3 @min-[38rem]:grid-cols-[auto_minmax(0,1fr)_auto_auto] @min-[38rem]:gap-x-4 @min-[38rem]:py-4 @min-[38rem]:pl-4 @min-[38rem]:pr-3">
         <span
           aria-hidden="true"
-          className={`relative col-start-1 row-start-1 grid size-9 place-items-center rounded-full @min-[38rem]:size-10 ${
+          className={`relative col-start-1 row-start-1 grid size-8 place-items-center rounded-full @min-[38rem]:size-10 ${
             revealed ? 'border border-line-strong bg-raised-hover text-fg-muted' : 'solved-fx chip-in bg-success text-accent-fg'
           }`}
         >
@@ -56,9 +56,9 @@ const SolvedCard = ({ fen, attempts, revealed, streak, hasNext, onNext, onBrowse
         </span>
 
         <div role="status" aria-live="polite" className="col-start-2 row-start-1 min-w-0">
-          <p className="font-display text-[1.1875rem] leading-tight text-fg @min-[38rem]:text-[1.375rem]">{title}</p>
+          <p className="font-display text-[1.0625rem] leading-tight text-fg @min-[38rem]:text-[1.375rem]">{title}</p>
           {/* The streak takes its own line on a narrow card, so a separator never dangles at a wrap. */}
-          <p className="mt-0.5 flex flex-col text-[0.875rem] leading-snug text-fg-muted @md:flex-row @md:flex-wrap @md:items-center @md:gap-x-1.5">
+          <p className="mt-0.5 flex flex-col text-[0.8125rem] leading-snug @min-[38rem]:text-[0.875rem] text-fg-muted @md:flex-row @md:flex-wrap @md:items-center @md:gap-x-1.5">
             <span>{detail}</span>
             {!revealed && (
               <span className="flex items-center">

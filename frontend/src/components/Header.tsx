@@ -3,7 +3,7 @@ import { HeaderProps } from "../utils/constants";
 import { isMuted, setMuted } from "../lib/sound";
 import ModeLever from "./ModeLever";
 import StreakGauge from "./StreakGauge";
-import { KingIcon } from "./Icons";
+import { KingIcon, SoundIcon } from "./Icons";
 
 // Brand, mode control, streak and sound in one row. On phones the wordmark and the switch's label are visually hidden
 // (screen readers still get them) so the row fits and the board keeps the height.
@@ -34,6 +34,7 @@ const Header = ({ mode, onModeChange, streak }: HeaderProps) => {
             <span className="toggle-base" aria-hidden="true">
               <span className="toggle-bat" />
             </span>
+            <SoundIcon on={!muted} className={`size-4 shrink-0 sm:hidden ${muted ? 'text-fg-subtle' : 'text-fg-muted'}`} />
             <span className="text-[0.8125rem] font-medium text-fg-muted max-sm:sr-only">Sound</span>
           </label>
         </div>

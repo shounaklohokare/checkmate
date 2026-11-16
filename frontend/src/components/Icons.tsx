@@ -67,6 +67,17 @@ export const CloseIcon = ({ className = '' }: { className?: string }) => (
   </svg>
 )
 
+export const SoundIcon = ({ className = '', on }: { className?: string; on: boolean }) => (
+  <svg viewBox="0 0 16 16" className={className} aria-hidden="true" focusable="false">
+    <path {...stroke} d="M2 6v4h2.5L8 13V3L4.5 6H2Z" />
+    {on ? (
+      <path {...stroke} d="M10.5 5.75a3.2 3.2 0 0 1 0 4.5M12.5 3.75a6 6 0 0 1 0 8.5" />
+    ) : (
+      <path {...stroke} d="M10.5 6l4 4M14.5 6l-4 4" />
+    )}
+  </svg>
+)
+
 // The Return key glyph, for the Enter shortcut hint.
 export const EnterIcon = ({ className = '' }: { className?: string }) => (
   <svg viewBox="0 0 16 16" className={className} aria-hidden="true" focusable="false">
