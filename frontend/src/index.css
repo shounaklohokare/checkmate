@@ -431,6 +431,7 @@ body {
     font-weight: 600;
     font-variant-numeric: tabular-nums;
     line-height: 1;
+    vertical-align: top;
   }
   .odo-digit {
     position: relative;

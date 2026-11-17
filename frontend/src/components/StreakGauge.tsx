@@ -7,13 +7,20 @@ const StreakGauge = ({ streak }: StreakGaugeProps) => {
   const alive = streak > 0
 
   return (
-    <div className="streak-pill" data-alive={alive} role="img" aria-label={`Streak: ${streak} ${days}`}>
-      <svg viewBox="0 0 16 16" className="streak-flame size-4 shrink-0" aria-hidden="true">
+    <div
+      className="streak-pill inline-flex items-center gap-1.5"
+      data-alive={alive}
+      role="img"
+      aria-label={`Streak: ${streak} ${days}`}
+    >
+      <svg viewBox="0 0 16 16" className="streak-flame block size-4 shrink-0" aria-hidden="true">
         <path d="M8.3 1.2c.3 2.3 3.6 4 3.6 7.7A3.9 3.9 0 0 1 8 14.8a3.9 3.9 0 0 1-3.9-3.9c0-1.6.8-2.8 1.7-3.7.1 1 .6 1.7 1.2 2C6.8 6.8 7 3.4 8.3 1.2Z" />
       </svg>
-      <span className="flex items-baseline gap-1.5" aria-hidden="true">
-        <span className="text-[0.9375rem] text-fg"><Odometer value={streak} digits={1} /></span>
-        <span className="hidden text-[0.8125rem] text-fg-muted sm:inline">{days}</span>
+      <span className="flex items-center gap-1.5 leading-none" aria-hidden="true">
+        <span className="flex h-4 items-center text-[0.9375rem] leading-none tabular-nums text-fg">
+          <Odometer value={streak} digits={1} />
+        </span>
+        <span className="hidden text-[0.8125rem] leading-none text-fg-muted sm:inline">{days}</span>
       </span>
     </div>
   )
