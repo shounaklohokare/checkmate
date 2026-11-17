@@ -37,6 +37,11 @@ const GameControls = ({ game, onNext, hasNext }: GameControlsProps) => {
   // After the solver's move the machine is replying; say so as a correct move.
   const shown: GameStatus = status === 'replaying' && moveIndex % 2 === 1 && !revealed ? 'correct-flash' : status
   const hint = !isSolved ? hintText(hintLevel, solverColor) : ''
+  // The hint takes over the status line while the solver is to move, so the panel never grows a row for it.
+  // Flashes (wrong/correct) and replays still take precedence.
+  const showHint = Boolean(hint) && status === 'playing'
+  const lineText = shown === 'solved' && revealed ? 'Solution shown.' : showHint ? hint : STATUS_TEXT[shown]
+  const lineColor = showHint ? 'text-accent' : shown === 'solved' && revealed ? 'text-fg' : STATUS_COLOR[shown]
 
   return (
     <section aria-label="Controls" className="panel px-3 py-1.5 sm:px-4 sm:py-3 lg:[@media(max-height:50rem)]:py-2">
@@ -49,9 +54,9 @@ const GameControls = ({ game, onNext, hasNext }: GameControlsProps) => {
         ) : (
           <span className={`lamp ${shown === 'solved' ? 'lamp-idle' : STATUS_LAMP[shown]}`} aria-hidden="true" />
         )}
-        <p role="status" aria-live="polite" className={`min-w-0 flex-1 text-[0.875rem] leading-snug font-semibold sm:text-[0.9375rem] ${shown === 'solved' && revealed ? 'text-fg' : STATUS_COLOR[shown]}`}>
-          {shown === 'solved' && revealed ? 'Solution shown.' : STATUS_TEXT[shown]}
-          {attempts > 0 && status === 'playing' && (
+        <p role="status" aria-live="polite" className={`min-w-0 flex-1 text-[0.875rem] leading-snug font-semibold sm:text-[0.9375rem] ${lineColor}`}>
+          {lineText}
+          {attempts > 0 && status === 'playing' && !showHint && (
             <span className="font-normal text-fg-muted"> · {attempts} wrong {attempts > 1 ? 'tries' : 'try'}</span>
           )}
         </p>
@@ -91,8 +96,6 @@ const GameControls = ({ game, onNext, hasNext }: GameControlsProps) => {
         )}
       </div>
       </div>
-
-      {hint && <p className="mt-1 mb-1 pl-5 text-[0.875rem] leading-snug text-accent sm:mt-2 sm:mb-0 sm:text-[0.9375rem]">{hint}</p>}
     </section>
   )
 }
