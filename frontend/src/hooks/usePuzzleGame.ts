@@ -108,7 +108,10 @@ export const usePuzzleGame = ( puzzle: Puzzle | null): GameState => {
 
         if (!mv) return false;
 
-        if (mv.san !== expectedSan) {
+        const isFinalMove = moveIndex === puzzle.solution.length - 1;
+        const accepted = mv.san === expectedSan || (isFinalMove && chess.isCheckmate());
+
+        if (!accepted) {
           chess.load(snapshotFen);
 
           setStatus("wrong-flash");
