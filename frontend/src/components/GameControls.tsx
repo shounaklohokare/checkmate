@@ -1,18 +1,42 @@
+import type { ComponentType, ReactNode } from "react"
 import { GameControlsProps, GameStatus, STATUS_COLOR, STATUS_LAMP, STATUS_TEXT } from "../utils/constants"
 import { hintLabel, hintText } from "../utils/utils"
 import { ArrowIcon, CheckIcon, EyeIcon, HintIcon, ResetIcon } from "./Icons"
 
+type ActionButtonProps = {
+  icon: ComponentType<{ className?: string }>
+  label: string // full label: text on larger screens, accessible name everywhere
+  caption: string // short word shown under the icon on phones
+  onClick: () => void
+  disabled?: boolean
+  className?: string
+  children?: ReactNode
+}
+
+// On phones each action is an icon with a short caption beneath it, so its purpose is visible without hovering.
+// The caption is aria-hidden; screen readers get the full label from the sr-only span.
+const ActionButton = ({ icon: Icon, label, caption, onClick, disabled, className = "" }: ActionButtonProps) => (
+  <button
+    type="button"
+    onClick={onClick}
+    disabled={disabled}
+    title={label}
+    className={`btn whitespace-nowrap px-2.5 text-[0.875rem] max-sm:h-auto max-sm:min-h-11 max-sm:min-w-14 max-sm:flex-col max-sm:gap-0.5 max-sm:px-1.5 max-sm:py-1 ${className}`}
+  >
+    <Icon className="size-[1.125rem] sm:size-4" />
+    <span className="max-sm:sr-only">{label}</span>
+    <span className="text-[0.6875rem] leading-none font-medium sm:hidden" aria-hidden="true">{caption}</span>
+  </button>
+)
+
 // A lamp and a status line beside the action buttons (they wrap beneath it when the panel is narrow); a hint line spans the panel.
-// On phones it is one slim row: the actions become 44px icon buttons (their text stays as the accessible name) so the board keeps the room.
+// On phones it is one slim row of compact captioned buttons so the board keeps the room.
 const GameControls = ({ game, onNext, hasNext }: GameControlsProps) => {
   const { status, hintLevel, requestHint, replaySolution, reset, isSolved, revealed, attempts, moveIndex, solverColor } = game
 
   // After the solver's move the machine is replying; say so as a correct move.
   const shown: GameStatus = status === 'replaying' && moveIndex % 2 === 1 && !revealed ? 'correct-flash' : status
   const hint = !isSolved ? hintText(hintLevel, solverColor) : ''
-
-  const action = "btn whitespace-nowrap px-2.5 text-[0.875rem] max-sm:size-11 max-sm:p-0"
-  const icon = "size-[1.125rem] sm:size-4"
 
   return (
     <section aria-label="Controls" className="panel px-3 py-1.5 sm:px-4 sm:py-3 lg:[@media(max-height:50rem)]:py-2">
@@ -35,24 +59,30 @@ const GameControls = ({ game, onNext, hasNext }: GameControlsProps) => {
 
       <div className={`flex flex-wrap items-center gap-2 ${isSolved && hasNext ? 'w-full justify-between' : 'justify-end'}`}>
         <div role="group" aria-label="Puzzle actions" className="flex gap-1.5 sm:gap-2">
-          {!isSolved && <button
-            type="button"
-            onClick={requestHint}
-            disabled={isSolved || status === 'replaying' || hintLevel >= 2}
-            title={hintLabel(hintLevel)}
-            className={`${action} ${hintLevel > 0 && !isSolved ? 'max-sm:text-accent' : ''}`}
-          >
-            <HintIcon className={icon} />
-            <span className="max-sm:sr-only">{hintLabel(hintLevel)}</span>
-          </button>}
-          <button type="button" onClick={replaySolution} disabled={isSolved || status === 'replaying'} title="Show solution" className={action}>
-            <EyeIcon className={icon} />
-            <span className="max-sm:sr-only">Show solution</span>
-          </button>
-          <button type="button" onClick={reset} disabled={status === 'replaying'} title="Reset" className={action}>
-            <ResetIcon className={icon} />
-            <span className="max-sm:sr-only">Reset</span>
-          </button>
+          {!isSolved && (
+            <ActionButton
+              icon={HintIcon}
+              label={hintLabel(hintLevel)}
+              caption={hintLevel > 0 ? 'More hint' : 'Hint'}
+              onClick={requestHint}
+              disabled={status === 'replaying' || hintLevel >= 2}
+              className={hintLevel > 0 ? 'max-sm:text-accent' : ''}
+            />
+          )}
+          <ActionButton
+            icon={EyeIcon}
+            label="Show solution"
+            caption="Solution"
+            onClick={replaySolution}
+            disabled={isSolved || status === 'replaying'}
+          />
+          <ActionButton
+            icon={ResetIcon}
+            label="Reset"
+            caption="Reset"
+            onClick={reset}
+            disabled={status === 'replaying'}
+          />
         </div>
         {isSolved && hasNext && (
           <button type="button" onClick={onNext} className="btn btn-primary px-3 max-sm:flex-1">
