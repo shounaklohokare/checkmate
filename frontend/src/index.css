@@ -386,6 +386,13 @@ body {
     animation: lamp-pulse 1.6s ease-in-out infinite;
   }
 
+  /* The hinted piece also gives a small shake, then rests, and repeats. */
+  .sq-hint > * { animation: hint-shake 2.4s ease-in-out infinite; transform-origin: 50% 80%; }
+
+  /* Second hint: the piece slides toward its destination and back, once. */
+  .sq-hint-go { z-index: 5; }
+  .sq-hint-go > * { animation: hint-slide 1.4s ease-in-out 1 both; }
+
   /* Check: a red glow under the king. */
   .sq-check::before {
     opacity: 1;
@@ -570,6 +577,21 @@ body {
 @keyframes lamp-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.65; }
+}
+
+@keyframes hint-shake {
+  0%, 30%, 100% { transform: none; }
+  4% { transform: translateX(-3%) rotate(-4deg); }
+  8% { transform: translateX(3%) rotate(4deg); }
+  12% { transform: translateX(-2.5%) rotate(-3deg); }
+  16% { transform: translateX(2%) rotate(3deg); }
+  20% { transform: translateX(-1%) rotate(-1.5deg); }
+  24% { transform: translateX(1%) rotate(1deg); }
+}
+
+@keyframes hint-slide {
+  0%, 100% { transform: none; }
+  35%, 60% { transform: translate(calc(var(--hx) * 100%), calc(var(--hy) * 100%)); }
 }
 
 @keyframes lamp-blink {

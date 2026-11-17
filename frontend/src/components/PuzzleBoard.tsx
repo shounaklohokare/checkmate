@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { Chessboard } from 'react-chessboard'
 
 import type { PieceDropHandlerArgs, PieceHandlerArgs, SquareHandlerArgs } from 'react-chessboard'
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import { PuzzleBoardProps } from '../utils/constants'
 import { Chess, Square } from 'chess.js'
 import { useBoardInput } from '../hooks/useBoardInput'
@@ -103,9 +103,20 @@ const PuzzleBoard = ({ game, children }: PuzzleBoardProps) => {
     lightSquareStyle: { backgroundColor: 'var(--color-square-light)' },
     darkSquareStyle: { backgroundColor: 'var(--color-square-dark)' },
     dropSquareStyle: { boxShadow: 'inset 0 0 0 3px var(--color-accent)' },
-    squareRenderer: ({ square, children: piece }: SquareHandlerArgs & { children?: ReactNode }) => (
-      <div className={`sq ${(squareClasses[square as Square] ?? []).join(' ')}`}>{piece}</div>
-    ),
+    squareRenderer: ({ square, children: piece }: SquareHandlerArgs & { children?: ReactNode }) => {
+      // Second hint: the piece on the from-square slides toward the to-square and back (offset in squares).
+      const go = hintSquares?.to && square === hintSquares.from
+      const flip = solverColor === 'white' ? 1 : -1
+      const style = go
+        ? ({
+            '--hx': flip * (FILES.indexOf(hintSquares.to![0]) - FILES.indexOf(square[0])),
+            '--hy': -flip * (Number(hintSquares.to![1]) - Number(square[1])),
+          } as CSSProperties)
+        : undefined
+      return (
+        <div className={`sq ${go ? 'sq-hint-go' : ''} ${(squareClasses[square as Square] ?? []).join(' ')}`} style={style}>{piece}</div>
+      )
+    },
     onSquareClick: ({ square }: SquareHandlerArgs) => input.pick(square as Square),
     onPieceDrop: ({ sourceSquare, targetSquare }: PieceDropHandlerArgs) => {
       input.clear()
