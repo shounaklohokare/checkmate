@@ -14,7 +14,7 @@ import CabinetDrawer from "./components/CabinetDrawer.tsx";
 import { SpinnerIcon } from "./components/Icons.tsx";
 import type { Mode, Puzzle } from "./utils/constants.ts";
 import Footer from "./components/Footer.tsx";
-import { api } from "./api.ts";
+import { loadDaily } from "./utils/daily.ts";
 import SolvedCard from "./components/SolvedCard.tsx";
 import { playMove, playSolved, playTick, playWrong } from "./lib/sound.ts";
 
@@ -39,6 +39,8 @@ const App = () => {
     setDrawerOpen(false);
   };
 
+  const { solvedIds, streak, markSolved } = useProgress();
+
   useEffect(() => {
     let cancelled = false;
 
@@ -46,10 +48,10 @@ const App = () => {
       setLoading(true);
       setLoadError(false);
       try {
-        const dailyRes = await api.get<Puzzle>("/puzzles/daily");
+        const daily = await loadDaily(solvedIds);
         if (cancelled) return;
 
-        setDailyPuzzle(dailyRes.data);
+        setDailyPuzzle(daily);
       } catch (err) {
         console.error("Failed to load puzzles:", err);
         if (!cancelled) setLoadError(true);
@@ -62,9 +64,9 @@ const App = () => {
     return () => {
       cancelled = true;
     };
+    // Solved ids are read at load time only: solving today's daily must not reload and replace it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reloadKey]);
-
-  const { solvedIds, streak, markSolved } = useProgress();
 
   // The library's default puzzle is the first one of the first page to arrive; later filter changes don't swap the board.
   useEffect(() => {

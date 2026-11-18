@@ -9,4 +9,5 @@ export default defineConfig({
     // Set in docker-compose.dev.yml: file events don't cross bind mounts on Windows/macOS.
     watch: process.env.VITE_USE_POLLING ? { usePolling: true, interval: 200 } : undefined,
   },
+  test: { environment: 'jsdom', include: ['src/**/*.test.{ts,tsx}'] },
 })

@@ -1,15 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { ProgressState, SavedProgress, STORAGE_KEY } from "../utils/constants";
-
-const todayStr = (d: Date = new Date()): string => {
-  return d.toISOString().slice(0, 10);
-}
-
-const isYesterday = (dateStr: string, today: Date = new Date()): boolean => {
-  const y = new Date(today);
-  y.setDate(y.getDate() - 1);
-  return dateStr === todayStr(y);
-}
+import { liveStreak, localDay, streakAfterSolve } from "../utils/streak";
 
 const loadInitial = (): ProgressState => {
   let saved: SavedProgress | null = null;
@@ -55,18 +46,12 @@ export const useProgress = () => {
 
   const markSolved = useCallback((puzzleId: string): void => {
     setProgress((prev) => {
+      // Re-solving a puzzle doesn't count towards the streak.
       if (prev.solvedIds.has(puzzleId)) {
         return prev;
       }
 
-      const today = todayStr();
-      const alreadyCountedToday = prev.lastSolvedDate === today;
-
-      const nextStreak = alreadyCountedToday
-        ? prev.streak
-        : prev.lastSolvedDate && isYesterday(prev.lastSolvedDate)
-        ? prev.streak + 1
-        : 1;
+      const next = streakAfterSolve(prev.streak, prev.lastSolvedDate, localDay());
 
       const nextSolved = new Set(prev.solvedIds);
       nextSolved.add(puzzleId);
@@ -74,10 +59,8 @@ export const useProgress = () => {
       return {
         ...prev,
         solvedIds: nextSolved,
-        streak: nextStreak,
-        lastSolvedDate: alreadyCountedToday
-          ? prev.lastSolvedDate
-          : today,
+        streak: next.streak,
+        lastSolvedDate: next.lastSolvedDate,
       };
     });
   }, []);
@@ -91,7 +74,7 @@ export const useProgress = () => {
 
   return {
     solvedIds: progress.solvedIds,
-    streak: progress.streak,
+    streak: liveStreak(progress.streak, progress.lastSolvedDate, localDay()),
     darkMode: progress.darkMode,
     markSolved,
     toggleDarkMode,
