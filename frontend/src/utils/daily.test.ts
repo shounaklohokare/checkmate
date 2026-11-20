@@ -6,20 +6,23 @@ import type { Difficulty, Puzzle } from './constants'
 
 const today = '2026-11-18'
 
-const p = (id: string, rating = 900, difficulty: Difficulty = 'Easy'): Puzzle => ({ ...ALT_MATE, id, rating, difficulty })
+const p = (id: string, rating = 900, difficulty: Difficulty = 'Easy', mateIn = 1): Puzzle => ({ ...ALT_MATE, id, rating, difficulty, mateIn })
 
 const D = p('D')
 
-type Params = { difficulty?: string; limit?: number; offset?: number }
+type Params = { difficulty?: string; min_rating?: number; mate_in?: number; limit?: number; offset?: number }
 
-/** Routes api.get: the shared daily, the Easy-from-rating list, the unfiltered list and single puzzles by id. */
-const stub = (opts: { shared?: Puzzle; easy?: Puzzle[]; all?: Puzzle[]; byId?: Record<string, Puzzle>; listError?: boolean }) =>
+/** Routes api.get: the shared daily, the list endpoint (filters `catalogue`, given in rating order) and single puzzles by id. */
+const stub = (opts: { shared?: Puzzle; catalogue?: Puzzle[]; byId?: Record<string, Puzzle>; listError?: boolean }) =>
   vi.spyOn(api, 'get').mockImplementation((async (url: string, config?: { params?: Params }) => {
     if (url === '/puzzles/daily') return { data: opts.shared ?? D }
     if (url === '/puzzles') {
       if (opts.listError) throw new Error('Network Error')
-      const { difficulty, limit = 200, offset = 0 } = config?.params ?? {}
-      const list = (difficulty ? opts.easy : opts.all) ?? []
+      const { difficulty, min_rating, mate_in, limit = 200, offset = 0 } = config?.params ?? {}
+      const list = (opts.catalogue ?? []).filter((q) =>
+        (!difficulty || q.difficulty === difficulty) &&
+        (min_rating === undefined || q.rating >= min_rating) &&
+        (mate_in === undefined || (mate_in === 5 ? q.mateIn >= 5 : q.mateIn === mate_in)))
       return { data: { items: list.slice(offset, offset + limit), total: list.length, limit, offset } }
     }
     const id = url.slice('/puzzles/'.length)
@@ -39,14 +42,14 @@ describe('loadDaily', () => {
     expect(pin()).toEqual({ day: today, id: 'D' })
   })
 
-  it('replaces a solved shared daily with the next unsolved puzzle at its difficulty', async () => {
-    stub({ easy: [D, p('X'), p('Y', 950)] })
+  it('replaces a solved shared daily with the next unsolved puzzle of its mate length and difficulty', async () => {
+    stub({ catalogue: [D, p('X'), p('M2', 920, 'Easy', 2), p('Y', 950)] })
     expect((await loadDaily(new Set(['D', 'X']), today)).id).toBe('Y')
     expect(pin()).toEqual({ day: today, id: 'Y' })
   })
 
   it('gives the same backup to users with different solved sets', async () => {
-    stub({ easy: [D, p('P'), p('Q'), p('Y', 950)] })
+    stub({ catalogue: [D, p('P'), p('Q'), p('Y', 950)] })
     expect((await loadDaily(new Set(['D', 'P']), today)).id).toBe('Q')
     localStorage.clear()
     expect((await loadDaily(new Set(['D', 'Q']), today)).id).toBe('P')
@@ -58,18 +61,23 @@ describe('loadDaily', () => {
 
   it('pages through the list', async () => {
     const solved = Array.from({ length: 200 }, (_, i) => p(`s${i}`))
-    const get = stub({ easy: [...solved, p('Z', 1000)] })
+    const get = stub({ catalogue: [...solved, p('Z', 1000)] })
     expect((await loadDaily(new Set(['D', ...solved.map((s) => s.id)]), today)).id).toBe('Z')
     expect(get).toHaveBeenCalledWith('/puzzles', expect.objectContaining({ params: expect.objectContaining({ offset: 200 }) }))
   })
 
+  it('falls back to its mate length at any rating', async () => {
+    stub({ catalogue: [p('A', 600), D, p('M2', 950, 'Easy', 2)] })
+    expect((await loadDaily(new Set(['D']), today)).id).toBe('A')
+  })
+
   it('falls back to the whole catalogue', async () => {
-    stub({ easy: [D, p('X')], all: [p('A', 600), D, p('W', 1500, 'Hard')] })
+    stub({ catalogue: [p('A', 600), D, p('X'), p('W', 1500, 'Hard', 3)] })
     expect((await loadDaily(new Set(['D', 'X', 'A']), today)).id).toBe('W')
   })
 
   it('returns the shared daily when everything is solved', async () => {
-    stub({ easy: [D, p('X')], all: [D, p('X')] })
+    stub({ catalogue: [D, p('X')] })
     expect((await loadDaily(new Set(['D', 'X']), today)).id).toBe('D')
     expect(pin()).toEqual({ day: today, id: 'D' })
   })

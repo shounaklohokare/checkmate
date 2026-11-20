@@ -10,24 +10,16 @@ app/
   main.py          FastAPI app, CORS, router registration
   config.py        env-based settings (DATABASE_URL, CORS_ORIGINS, ...)
   db.py            engine + per-request session dependency
-  models.py        Puzzle ORM model — the single source of truth for the schema
+  models.py        Puzzle and DailySchedule ORM models — the single source of truth for the schema
+  daily.py         daily puzzle selection: weekday pools and pick_daily
   schemas.py       Pydantic response models (camelCase, matches the frontend's Puzzle type)
   routers/
     puzzles.py     all /api/puzzles endpoints
-scripts/
-  convert-puzzles-to-json.mjs   TS/JS puzzle data -> JSON
-  import_puzzles.py             validates with python-chess, then loads into the DB
+tests/             pytest suite (API and daily schedule)
+puzzles.db         committed SQLite database: the puzzles and the daily schedule
 requirements.txt
+requirements-dev.txt
 .env.example
-```
-
-`scripts/import_puzzles.py` imports `Puzzle`/`Base` from `app/models.py` rather
-than defining its own copy, so the table the importer writes to and the table
-the API reads from can never drift out of sync. Run it from the project root
-so the `app` package is importable:
-
-```bash
-python scripts/import_puzzles.py puzzles.json
 ```
 
 ## Setup
@@ -48,15 +40,14 @@ With no `DATABASE_URL` set, the API reads the committed SQLite database
 export DATABASE_URL="postgresql://puzzle_admin:changeme@localhost:5432/chess_puzzles"
 ```
 
-## Seed the database
+## Data
 
-```bash
-python scripts/import_puzzles.py puzzles.json
-```
+The committed `puzzles.db` holds 3,397 puzzles and the `daily_schedule` table,
+so there is nothing to seed for local development.
 
-This creates the database and the `puzzles` table if they don't exist yet
-(see the import script's own docs for details), validates every puzzle with
-`python-chess`, and upserts the valid ones.
+Each scheduled date has one puzzle from its weekday's pool in `app/daily.py`
+(Monday mate in 1 rated 800–999 up to Sunday mate in 3 rated 1400–1799). A date
+with no row falls back to a mate-in-1–2 puzzle rated under 1500.
 
 ## Run the API
 
@@ -71,8 +62,8 @@ Interactive docs at `http://localhost:8000/docs`.
 | Method | Path                  | Description                                              |
 |--------|-----------------------|------------------------------------------------------------|
 | GET    | `/health`              | Liveness check                                            |
-| GET    | `/api/puzzles`         | List puzzles. Query params: `difficulty`, `theme`, `min_rating`, `max_rating`, `limit` (default 50, max 200), `offset` |
-| GET    | `/api/puzzles/daily`   | Deterministic daily puzzle — same for everyone, changes once a day |
+| GET    | `/api/puzzles`         | List puzzles. Query params: `difficulty`, `theme`, `min_rating`, `max_rating`, `mate_in` (1–4 exact, 5 means 5 or more), `limit` (default 50, max 200), `offset` |
+| GET    | `/api/puzzles/daily`   | Today's puzzle from the stored schedule, same for everyone. Optional `date` (`YYYY-MM-DD`, within one day of the server's UTC date, else 422) |
 | GET    | `/api/puzzles/{id}`    | Single puzzle by id (the human-readable slug, e.g. `p1` or `i5qhQ`) — 404 if missing |
 
 `/api/puzzles` and `/api/puzzles/{id}` both return puzzle objects shaped like:
@@ -81,7 +72,7 @@ Interactive docs at `http://localhost:8000/docs`.
 {
   "id": "i5qhQ",
   "title": "Mate in 4",
-  "theme": "Attraction",
+  "theme": "cornerMate",
   "difficulty": "Medium",
   "rating": 1814,
   "popularity": 95,
@@ -89,9 +80,14 @@ Interactive docs at `http://localhost:8000/docs`.
   "initialFen": "5rk1/1p4pp/p2p2q1/2p1p1nr/2P3P1/1P1P2KP/P4P2/R1BQ1R2 w - - 3 27",
   "fen": "5rk1/1p4pp/p2p2q1/2p1p1nP/2P5/1P1P2KP/P4P2/R1BQ1R2 b - - 0 27",
   "preMove": "gxh5",
-  "solution": ["Ne4+", "Kh2", "Rxf2+", "Rxf2", "Qg3+", "Kh1", "Nxf2#"]
+  "solution": ["Ne4+", "Kh2", "Rxf2+", "Rxf2", "Qg3+", "Kh1", "Nxf2#"],
+  "mateIn": 4
 }
 ```
+
+`theme` is the puzzle's primary named mate pattern in camelCase (for
+example `backRankMate`), or `null` when it has none. `mateIn` is the mate
+length.
 
 This is the same shape as the frontend's existing `Puzzle` TS type (`id` maps
 from the DB's `slug` column; `initialFen`/`preMove` map from

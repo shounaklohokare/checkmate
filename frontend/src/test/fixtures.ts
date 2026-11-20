@@ -13,6 +13,7 @@ export const ALT_MATE: Puzzle = {
   preMove: 'Nxe5',
   fen: '4qkr1/r6R/p3p3/1p1pn3/3P1N2/2P2Q2/PP4PP/6K1 w - - 0 30',
   solution: ['Ng6#'],
+  mateIn: 1,
 }
 
 /** Solver f7→h6, reply g8→h8, solver f1→f8. */
@@ -28,4 +29,5 @@ export const MATE_IN_2: Puzzle = {
   preMove: 'Rxb2',
   fen: '5rk1/5Npp/p7/1p6/6P1/1BP1b2P/Pr6/5R1K w - - 0 27',
   solution: ['Nh6+', 'Kh8', 'Rxf8#'],
+  mateIn: 2,
 }

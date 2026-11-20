@@ -12,6 +12,9 @@ frontend/node_modules
 dist
 dist-ssr
 *.local
+.impeccable/
+
+.claude/*
 
 # Editor directories and files
 .vscode/*
@@ -31,3 +34,17 @@ __pycache__/
 .env
 .vite/
 *.tsbuildinfo
+
+# Lichess source data and the old converter's scratch output
+lichess app puzzle converter/
+*.har
+
+# Puzzle selection/import tooling and its data (Tasks 1.6, 1.7), kept out of the public repo
+backend/scripts/
+backend/data/
+backend/tests/test_import_validation.py
+tools/puzzles/
+CLAUDE.md
+IMPLEMENTATION_PLAN.md
+DESIGN.md
+PRODUCT.md

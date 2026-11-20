@@ -14,6 +14,7 @@ class PuzzleRes(BaseModel):
     fen: str
     preMove: str | None = Field(default=None, validation_alias="pre_move")
     solution: list[str]
+    mateIn: int = Field(validation_alias="mate_in")
 
 
 class PuzzleListRes(BaseModel):

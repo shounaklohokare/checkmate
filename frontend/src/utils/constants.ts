@@ -7,7 +7,7 @@ export type Difficulty = "Easy" | "Medium" | "Hard";
 export interface Puzzle {
   id: string;
   title: string;
-  theme: string;
+  theme: string | null;
   difficulty: Difficulty;
   rating: number;
   popularity: number;
@@ -16,6 +16,7 @@ export interface Puzzle {
   fen: string;
   preMove: string;
   solution: string[];
+  mateIn: number;
 }
 
 /** The list endpoint's paginated response. */

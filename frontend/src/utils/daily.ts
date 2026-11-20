@@ -38,7 +38,8 @@ const firstUnskipped = async (params: Record<string, string | number>, skip: (id
 
 /**
  * Today's daily for this device: today's pin, else the shared daily unless already solved, else the first
- * unsolved backup (same difficulty from the daily's rating up, then the whole catalogue). The search order
+ * unsolved backup (same mate length and difficulty from the daily's rating up, then same mate length at any
+ * rating, then the whole catalogue). The search order
  * never depends on the user, so everyone who has solved the daily gets the same backup.
  */
 export const loadDaily = async (solvedIds: ReadonlySet<string>, today: string = localDay()): Promise<Puzzle> => {
@@ -61,7 +62,10 @@ export const loadDaily = async (solvedIds: ReadonlySet<string>, today: string = 
   const skip = (id: string) => id === shared.id || solvedIds.has(id);
   let backup: Puzzle | null;
   try {
-    backup = (await firstUnskipped({ difficulty: shared.difficulty, min_rating: shared.rating }, skip)) ?? (await firstUnskipped({}, skip));
+    backup =
+      (await firstUnskipped({ mate_in: shared.mateIn, difficulty: shared.difficulty, min_rating: shared.rating }, skip)) ??
+      (await firstUnskipped({ mate_in: shared.mateIn }, skip)) ??
+      (await firstUnskipped({}, skip));
   } catch {
     // Show the shared daily rather than an error, unpinned so the next load searches again.
     return shared;
