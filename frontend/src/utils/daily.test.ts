@@ -86,7 +86,7 @@ describe('loadDaily', () => {
     localStorage.setItem(DAILY_PIN_KEY, JSON.stringify({ day: today, id: 'Y' }))
     const get = stub({ byId: { Y: p('Y') } })
     expect((await loadDaily(new Set(['D', 'Y']), today)).id).toBe('Y')
-    expect(get).not.toHaveBeenCalledWith('/puzzles/daily')
+    expect(get).not.toHaveBeenCalledWith('/puzzles/daily', expect.anything())
   })
 
   it("ignores yesterday's pin", async () => {

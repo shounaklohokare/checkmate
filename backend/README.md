@@ -15,8 +15,10 @@ app/
   schemas.py       Pydantic response models (camelCase, matches the frontend's Puzzle type)
   routers/
     puzzles.py     all /api/puzzles endpoints
+alembic/           schema migrations (versions/0001_baseline.py creates the current tables)
+alembic.ini
 tests/             pytest suite (API and daily schedule)
-puzzles.db         committed SQLite database: the puzzles and the daily schedule
+puzzles.db         committed SQLite database: the puzzles and the daily schedule (stamped at the latest migration)
 requirements.txt
 requirements-dev.txt
 .env.example
@@ -29,8 +31,13 @@ python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+
+```bash
+pip install -r requirements-dev.txt
+```
+
 Settings come only from real environment variables (`DATABASE_URL`,
-`CORS_ORIGINS`, `MAX_PAGE_SIZE`; see `.env.example`). Nothing loads a `.env`
+`CORS_ORIGINS`, `MAX_PAGE_SIZE`, `ENABLE_DOCS`; see `.env.example`). Nothing loads a `.env`
 file, so export them in your shell.
 
 With no `DATABASE_URL` set, the API reads the committed SQLite database
@@ -39,6 +46,17 @@ With no `DATABASE_URL` set, the API reads the committed SQLite database
 ```bash
 export DATABASE_URL="postgresql://puzzle_admin:changeme@localhost:5432/chess_puzzles"
 ```
+
+## Postgres
+
+1. Set `DATABASE_URL` to the Postgres database (see above).
+2. Create or update the tables: `alembic upgrade head` (run from `backend/`).
+3. Load the puzzles and the daily schedule into it.
+
+The Docker image runs `alembic upgrade head` before starting the server, so a
+deploy applies any new migrations automatically. Schema changes go in a new
+migration (`alembic revision --autogenerate -m "<what changed>"`) after editing
+`app/models.py`.
 
 ## Data
 
@@ -55,7 +73,8 @@ with no row falls back to a mate-in-1–2 puzzle rated under 1500.
 uvicorn app.main:app --reload --port 8000
 ```
 
-Interactive docs at `http://localhost:8000/docs`.
+Interactive docs at `http://localhost:8000/docs`. Set `ENABLE_DOCS=0` in
+production to turn off `/docs` and `/openapi.json`.
 
 ## Endpoints
 

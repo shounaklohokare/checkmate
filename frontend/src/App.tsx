@@ -15,6 +15,7 @@ import { SpinnerIcon } from "./components/Icons.tsx";
 import type { Mode, Puzzle } from "./utils/constants.ts";
 import Footer from "./components/Footer.tsx";
 import { loadDaily } from "./utils/daily.ts";
+import { viewState } from "./utils/utils.ts";
 import SolvedCard from "./components/SolvedCard.tsx";
 import { playMove, playSolved, playTick, playWrong } from "./lib/sound.ts";
 
@@ -138,7 +139,13 @@ const App = () => {
     }
   };
 
-  if (loadError || (library.error && !selectedPuzzle)) {
+  const view = viewState(
+    mode,
+    { puzzle: dailyPuzzle, loading, error: loadError },
+    { selected: selectedPuzzle, error: library.error },
+  );
+
+  if (view === "error") {
     return (
       <div className="flex min-h-svh flex-col items-center justify-center gap-4 px-6 text-center">
         <div className="panel max-w-md px-8 py-6">
@@ -152,7 +159,7 @@ const App = () => {
     );
   }
 
-  if (loading || !dailyPuzzle || !selectedPuzzle) {
+  if (view === "loading") {
     return (
       <div className="flex min-h-svh flex-col items-center justify-center gap-4" role="status">
         <SpinnerIcon className="size-10 animate-spin" />
@@ -221,7 +228,7 @@ const App = () => {
             <div className="flex min-h-0 flex-1 flex-col gap-3">
               {/* Desktop: the controls head the side column so the board can take the full height. */}
               {isDesktop && controls}
-              {mode === "daily" ? (
+              {mode === "daily" && dailyPuzzle ? (
                 <DailyColumn
                   puzzle={dailyPuzzle}
                   showCaption={isDesktop}

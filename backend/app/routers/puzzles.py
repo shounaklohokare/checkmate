@@ -1,6 +1,6 @@
 from datetime import date, datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -13,7 +13,7 @@ from app.schemas import PuzzleListRes, PuzzleRes
 router = APIRouter(prefix="/api/puzzles", tags=["puzzles"])
 
 @router.get("/daily", response_model=PuzzleRes)
-def get_daily_puzzle(day: date | None = Query(None, alias="date"), db: Session = Depends(get_db)):
+def get_daily_puzzle(response: Response, day: date | None = Query(None, alias="date"), db: Session = Depends(get_db)):
     today = datetime.now(timezone.utc).date()
     if day is None:
         day = today
@@ -23,10 +23,12 @@ def get_daily_puzzle(day: date | None = Query(None, alias="date"), db: Session =
     puzzle = pick_daily(db, day)
     if puzzle is None:
         raise HTTPException(status_code=404, detail="No puzzles available")
+    response.headers["Cache-Control"] = "public, max-age=300"
     return puzzle
 
 @router.get("", response_model=PuzzleListRes)
 def list_puzzles(
+    response: Response,
     difficulty: str | None = Query(None, description="Easy | Medium | Hard"),
     theme: str | None = None,
     min_rating: int | None = None,
@@ -51,11 +53,13 @@ def list_puzzles(
     total = db.execute(select(func.count()).select_from(query.subquery())).scalar_one()
     rows = db.execute(query.order_by(Puzzle.rating, Puzzle.id).offset(offset).limit(limit)).scalars().all()
 
+    response.headers["Cache-Control"] = "public, max-age=3600"
     return PuzzleListRes(items=rows, total=total, limit=limit, offset=offset)
 
 @router.get("/{puzzle_id}", response_model=PuzzleRes)
-def get_puzzle(puzzle_id: str, db: Session = Depends(get_db)):
+def get_puzzle(puzzle_id: str, response: Response, db: Session = Depends(get_db)):
     puzzle = db.execute(select(Puzzle).where(Puzzle.slug == puzzle_id)).scalar_one_or_none()
     if puzzle is None:
         raise HTTPException(status_code=404, detail=f"No puzzle with id '{puzzle_id}'")
+    response.headers["Cache-Control"] = "public, max-age=3600"
     return puzzle

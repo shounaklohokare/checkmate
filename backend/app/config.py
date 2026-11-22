@@ -12,5 +12,7 @@ class Settings:
 
     max_page_size: int = int(os.environ.get("MAX_PAGE_SIZE", "200"))
 
+    docs_enabled: bool = os.environ.get("ENABLE_DOCS", "1") == "1"
+
 
 settings = Settings()

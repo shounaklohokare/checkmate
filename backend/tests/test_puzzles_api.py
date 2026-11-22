@@ -79,3 +79,21 @@ def test_list_mate_in_filter(client):
 def test_list_mate_in_out_of_range(client):
     assert client.get("/api/puzzles?mate_in=6").status_code == 422
     assert client.get("/api/puzzles?mate_in=0").status_code == 422
+
+
+def test_list_cache_header(client):
+    assert client.get("/api/puzzles").headers["cache-control"] == "public, max-age=3600"
+
+
+def test_get_by_id_cache_header(client):
+    assert client.get("/api/puzzles/UPfj4").headers["cache-control"] == "public, max-age=3600"
+
+
+def test_get_by_id_not_found_has_no_cache_header(client):
+    res = client.get("/api/puzzles/nope")
+    assert res.status_code == 404
+    assert "cache-control" not in res.headers
+
+
+def test_daily_cache_header(client):
+    assert client.get("/api/puzzles/daily").headers["cache-control"] == "public, max-age=300"

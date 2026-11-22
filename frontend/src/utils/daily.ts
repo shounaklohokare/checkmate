@@ -1,4 +1,4 @@
-import { api } from "../api";
+import { api, fetchDaily } from "../api";
 import { localDay } from "./streak";
 import type { Puzzle, PuzzleList } from "./constants";
 
@@ -53,7 +53,7 @@ export const loadDaily = async (solvedIds: ReadonlySet<string>, today: string = 
     }
   }
 
-  const shared = (await api.get<Puzzle>("/puzzles/daily")).data;
+  const shared = await fetchDaily();
   if (!solvedIds.has(shared.id)) {
     writePin(today, shared.id);
     return shared;

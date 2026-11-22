@@ -1,2 +1,4 @@
-pytest
-httpx
+pytest==9.2.0
+httpx==0.28.1
+chess==1.11.2
+SQLAlchemy-Utils==0.43.0

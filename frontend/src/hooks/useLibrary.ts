@@ -2,6 +2,27 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "../api.ts";
 import type { Filter, LibraryState, Puzzle, PuzzleList } from "../utils/constants.ts";
 
+type Page = { items: Puzzle[]; total: number };
+
+// Pages already fetched, keyed `${filter}|${page}|${size}`. Only successful responses go in.
+const cache = new Map<string, Page>();
+
+/** Empties the page cache (tests). */
+export const clearLibraryCache = (): void => cache.clear();
+
+const fetchPage = async (filter: Filter, page: number, size: number): Promise<Page> => {
+  const res = await api.get<PuzzleList>("/puzzles", {
+    params: {
+      difficulty: filter === "All" ? undefined : filter,
+      limit: size,
+      offset: page * size,
+    },
+  });
+  const fetched = { items: res.data.items, total: res.data.total };
+  cache.set(`${filter}|${page}|${size}`, fetched);
+  return fetched;
+};
+
 // The catalogue's list: difficulty filter, page, and the fetched page of puzzles.
 // Lives in App so it survives mode switches and feeds "Next puzzle".
 export const useLibrary = (): LibraryState => {
@@ -15,25 +36,37 @@ export const useLibrary = (): LibraryState => {
   const [data, setData] = useState<{ key: string; items: Puzzle[]; total: number }>({ key: "", items: [], total: 0 });
   const [errorKey, setErrorKey] = useState("");
 
-  const key = `${filter}|${page}|${size}|${retryKey}`;
+  const cacheKey = `${filter}|${page}|${size}`;
+  const key = `${cacheKey}|${retryKey}`;
+  const cached = cache.get(cacheKey);
 
   useEffect(() => {
     let cancelled = false;
 
-    api.get<PuzzleList>("/puzzles", {
-      params: {
-        difficulty: filter === "All" ? undefined : filter,
-        limit: size,
-        offset: page * size,
-      },
-    }).then((res) => {
-      if (!cancelled) setData({ key, items: res.data.items, total: res.data.total });
-    }).catch(() => {
-      if (!cancelled) setErrorKey(key);
-    });
+    // Warm the next page so paging and "Next puzzle" don't wait. A failed prefetch is ignored.
+    const prefetch = (total: number) => {
+      if ((page + 1) * size < total && !cache.has(`${filter}|${page + 1}|${size}`)) {
+        fetchPage(filter, page + 1, size).catch(() => {});
+      }
+    };
+
+    const hit = cache.get(cacheKey);
+    if (hit) {
+      // Keep it as the list shown while a later, uncached page loads.
+      setData({ key, ...hit });
+      prefetch(hit.total);
+    } else {
+      fetchPage(filter, page, size).then((fetched) => {
+        if (cancelled) return;
+        setData({ key, ...fetched });
+        prefetch(fetched.total);
+      }).catch(() => {
+        if (!cancelled) setErrorKey(key);
+      });
+    }
 
     return () => { cancelled = true; };
-  }, [filter, page, size, key]);
+  }, [filter, page, size, cacheKey, key]);
 
   const setFilter = useCallback((f: Filter): void => {
     setFilterState(f);
@@ -50,14 +83,15 @@ export const useLibrary = (): LibraryState => {
   const retry = useCallback((): void => setRetryKey((k) => k + 1), []);
 
   const error = errorKey === key;
+  const shown = cached ?? data;
 
   return {
     filter,
     page,
-    pages: Math.max(1, Math.ceil(data.total / size)),
-    items: data.items,
-    total: data.total,
-    loading: data.key !== key && !error,
+    pages: Math.max(1, Math.ceil(shown.total / size)),
+    items: shown.items,
+    total: shown.total,
+    loading: !cached && data.key !== key && !error,
     error,
     setFilter,
     setPage,

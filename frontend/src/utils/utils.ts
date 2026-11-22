@@ -1,4 +1,4 @@
-import { Puzzle, SolverColor } from "./constants"
+import { Mode, Puzzle, SolverColor } from "./constants"
 
 export const hintLabel = (hintLevel: number): string => {
   if (hintLevel === 0) return 'Hint'
@@ -24,4 +24,20 @@ export const problemPrompt = (puzzle: Puzzle): string => {
   const side = puzzle.fen.split(' ')[1] === 'b' ? 'Black' : 'White'
   if (n === 1) return `${side} to play and mate in one move.`
   return `${side} to play and mate in ${NUMBER_WORDS[n - 1] ?? n} moves.`
+}
+
+export type ViewState = 'error' | 'loading' | 'ready'
+
+/** What the app shows for the current mode: each mode waits only on its own data. */
+export const viewState = (
+  mode: Mode,
+  daily: { puzzle: Puzzle | null; loading: boolean; error: boolean },
+  library: { selected: Puzzle | null; error: boolean },
+): ViewState => {
+  if (mode === 'daily') {
+    if (daily.error) return 'error'
+    return daily.loading || !daily.puzzle ? 'loading' : 'ready'
+  }
+  if (!library.selected) return library.error ? 'error' : 'loading'
+  return 'ready'
 }
