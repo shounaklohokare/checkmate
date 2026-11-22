@@ -41,11 +41,11 @@ def test_list_offset(client):
 
 
 def test_get_by_id(client):
-    res = client.get("/api/puzzles/i5qhQ")
+    res = client.get("/api/puzzles/UPfj4")
     assert res.status_code == 200
     body = res.json()
     assert set(body) == PUZZLE_KEYS
-    assert body["id"] == "i5qhQ"
+    assert body["id"] == "UPfj4"
     assert body["mateIn"] == 4
     assert body["title"] == "Mate in 4"
     assert isinstance(body["solution"], list)

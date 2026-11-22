@@ -42,7 +42,7 @@ export DATABASE_URL="postgresql://puzzle_admin:changeme@localhost:5432/chess_puz
 
 ## Data
 
-The committed `puzzles.db` holds 3,397 puzzles and the `daily_schedule` table,
+The committed `puzzles.db` holds 50,000 puzzles and the `daily_schedule` table,
 so there is nothing to seed for local development.
 
 Each scheduled date has one puzzle from its weekday's pool in `app/daily.py`
@@ -64,23 +64,23 @@ Interactive docs at `http://localhost:8000/docs`.
 | GET    | `/health`              | Liveness check                                            |
 | GET    | `/api/puzzles`         | List puzzles. Query params: `difficulty`, `theme`, `min_rating`, `max_rating`, `mate_in` (1–4 exact, 5 means 5 or more), `limit` (default 50, max 200), `offset` |
 | GET    | `/api/puzzles/daily`   | Today's puzzle from the stored schedule, same for everyone. Optional `date` (`YYYY-MM-DD`, within one day of the server's UTC date, else 422) |
-| GET    | `/api/puzzles/{id}`    | Single puzzle by id (the human-readable slug, e.g. `p1` or `i5qhQ`) — 404 if missing |
+| GET    | `/api/puzzles/{id}`    | Single puzzle by id (the human-readable slug, e.g. `p1` or `UPfj4`) — 404 if missing |
 
 `/api/puzzles` and `/api/puzzles/{id}` both return puzzle objects shaped like:
 
 ```json
 {
-  "id": "i5qhQ",
+  "id": "UPfj4",
   "title": "Mate in 4",
-  "theme": "cornerMate",
-  "difficulty": "Medium",
-  "rating": 1814,
-  "popularity": 95,
-  "description": "Trap the king in the corner. Find the forced checkmate.",
-  "initialFen": "5rk1/1p4pp/p2p2q1/2p1p1nr/2P3P1/1P1P2KP/P4P2/R1BQ1R2 w - - 3 27",
-  "fen": "5rk1/1p4pp/p2p2q1/2p1p1nP/2P5/1P1P2KP/P4P2/R1BQ1R2 b - - 0 27",
-  "preMove": "gxh5",
-  "solution": ["Ne4+", "Kh2", "Rxf2+", "Rxf2", "Qg3+", "Kh1", "Nxf2#"],
+  "theme": "operaMate",
+  "difficulty": "Easy",
+  "rating": 1493,
+  "popularity": 100,
+  "description": "Find the forced checkmate.",
+  "initialFen": "6k1/pQ2np1p/3b2pB/8/3q1P1P/6P1/PPr5/4R2K b - - 1 29",
+  "fen": "6k1/pQ2np1p/3b2pB/8/5P1P/6P1/PPr2q2/4R2K w - - 2 30",
+  "preMove": "Qf2",
+  "solution": ["Qa8+", "Rc8", "Qxc8+", "Nxc8", "Re8+", "Bf8", "Rxf8#"],
   "mateIn": 4
 }
 ```
